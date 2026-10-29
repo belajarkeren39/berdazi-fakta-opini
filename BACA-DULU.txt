@@ -1,0 +1,192 @@
+﻿BERDAZI - FAKTA DAN OPINI | VERSI OFFLINE
+
+CARA MEMAINKAN
+1. Ekstrak seluruh isi BERDAZI-Toko-Rapi.zip terlebih dahulu.
+2. Buka folder BERDAZI-Toko-Rapi hasil ekstrak.
+3. Klik dua kali index.html, lalu buka menggunakan Chrome atau Edge.
+4. Masukkan nama dan tekan MULAI PETUALANGAN.
+5. Baca halaman rangkuman, lalu tekan Lanjut ke Latihan.
+6. Selesaikan 3 latihan dengan benar, ikuti pengarahan misi, lalu masuk kota.
+7. Internet tidak diperlukan, termasuk saat pertama kali membuka permainan.
+   Tidak perlu memasang aplikasi tambahan atau menjalankan server.
+
+Musik mulai setelah tombol MULAI PETUALANGAN ditekan.
+Klik ikon speaker untuk membuka pengaturan volume:
+- Musik latar: 0-100%.
+- Efek suara: 0-100% (klik tombol dan efek jawaban).
+- Putar/Jeda musik.
+- Senyapkan semua / Aktifkan suara.
+Pengaturan diterapkan langsung dan disimpan di browser jika penyimpanan
+lokal diizinkan. Volume 0 membisukan kanal terkait; Senyapkan semua
+membisukan kedua kanal tanpa mengubah posisi penggeser.
+Progres hanya berlaku selama sesi permainan; memuat ulang halaman mengulang
+permainan, sama seperti versi asli.
+
+ISI FOLDER
+index.html          : pembuka dan penyesuai layar 16:9
+assets/permainan.html: halaman permainan, materi, dan kode aplikasi
+assets/gambar/      : 34 gambar PNG
+assets/audio/       : musik, 2 efek jawaban MP3, dan 1 efek klik WAV
+assets/css/         : gaya tampilan lokal
+assets/vendor/      : pustaka React dan ReactDOM lokal
+DAFTAR-ASET.csv     : nama berkas aset dan alamat sumber aslinya
+LISENSI/           : lisensi pustaka pendukung
+
+TAMPILAN 16:9
+Seluruh permainan menggunakan kanvas 1600 x 900 yang diperkecil atau
+diperbesar otomatis mengikuti layar. Semua halaman dan pop-up ikut
+diskalakan bersama. Pada layar dengan rasio berbeda, ruang kosong di
+tepi menjaga proporsi 16:9. Gambar tidak diregangkan menjadi 16:9;
+gambar tetap memakai proporsi aslinya di dalam area permainan.
+Gunakan posisi mendatar pada ponsel agar teks dan tombol lebih besar.
+Tombol layar penuh tetap mempertahankan rasio permainan.
+
+Cover menggunakan latar-kota.png, logo-berdazi.png, aldi.png, arya.png,
+dan suri.png dari assets/gambar/. Tidak ada pengunduhan saat bermain.
+
+PROFIL PENGEMBANG
+Klik ikon Profil Pengembang di halaman awal untuk membuka pop-up profil.
+Foto: assets/gambar/profil-pengembang.png. Ganti dengan PNG bernama sama.
+Nama: Abdul Rahmat, S.Pd
+Asal Instansi: SD Negeri 011 Balikpapan Tengah
+Jenis: Gim Edukasi
+Tutup menggunakan tombol silang, tombol Escape, atau klik di luar pop-up.
+
+CARA MENGGANTI GAMBAR
+1. Tutup permainan atau simpan cadangan aset yang akan diganti.
+2. Ganti gambar di assets/gambar/ dengan gambar PNG milik Anda.
+3. Gunakan nama berkas yang SAMA, termasuk ekstensi .png.
+   Contoh: aldi.png, zombie-raja.png, logo-berdazi.png, latar-kota.png.
+4. Buka ulang index.html atau tekan Ctrl+F5 untuk memuat ulang aset.
+
+Gunakan PNG berlatar transparan untuk karakter dan perlengkapan.
+Untuk latar dan logo, pertahankan perbandingan ukuran gambar aslinya.
+Jika ingin menggunakan nama atau format berbeda, ubah jalur yang sesuai di
+assets/permainan.html. Jalur latar-kota dan pola-kubus berada di assets/css/custom.css.
+Mengganti ekstensi saja tidak mengubah format gambar; ekspor sebagai PNG.
+
+EFEK KLIK GRATIS
+Tombol dan pilihan latihan berbunyi saat diaktifkan dengan klik, sentuhan,
+atau keyboard. Tombol nonaktif dan klik pada latar tidak membunyikan efek.
+Volume mengikuti penggeser Efek suara. Senyapkan semua juga membisukannya.
+Berkas klik.wav dibuat dengan sintesis asli tanpa sampel pihak ketiga;
+boleh digunakan gratis tanpa kewajiban atribusi. Lihat LISENSI/Efek-Klik.txt.
+Untuk menggantinya, gunakan WAV bernama klik.wav di assets/audio/.
+
+CARA MENGGANTI AUDIO
+Ganti berkas berikut dengan audio MP3 dan pertahankan nama berkasnya:
+- musik-berdazi.mp3 : lagu latar, diputar berulang
+- jawaban-benar.mp3 : efek jawaban benar
+- jawaban-salah.mp3 : efek jawaban salah
+
+Seluruh audio berada di assets/audio/. Untuk memakai nama atau format audio
+lain, ubah jalur yang sesuai di assets/permainan.html. Ekspor audio dalam format yang
+benar; jangan hanya mengganti ekstensi berkas.
+
+CATATAN
+- Jangan membuka index.html langsung dari dalam ZIP. Ekstrak semuanya.
+- Jika memindahkan permainan ke komputer lain, salin seluruh folder.
+- Folder assets harus tetap berada di samping index.html.
+- Materi diubah menjadi Perbedaan Fakta dan Opini.
+- Kredit pencipta dan aset media asli dipertahankan.
+- Ikon antarmuka kecil berbentuk SVG tetap berada di kode assets/permainan.html.
+- Tidak ada pemasangan pustaka atau pengunduhan aset saat bermain.
+
+RANGKUMAN DAN LATIHAN SEBELUM BERMAIN
+Alur: halaman awal -> rangkuman materi -> 3 latihan pemahaman -> pengarahan
+misi -> masuk kota -> level permainan.
+
+Rangkuman memakai materi yang diberikan pengguna dan disajikan dalam
+tiga bagian yang dapat dibuka melalui tombol bagian atau Materi Berikutnya:
+1. Kalimat Fakta: pengertian, ciri objektif, data akurat, 5W + 1H,
+   serta ketiga contoh yang diberikan.
+2. Kalimat Opini: pengertian, ciri subjektif, rencana/prediksi,
+   kata penanda, serta ketiga contoh yang diberikan.
+3. Perbedaan Utama: tabel kebenaran, sifat, dan bukti.
+
+Tombol Lanjut ke Latihan tersedia pada bagian Perbedaan Utama.
+Latihan pembuka dan misi permainan tetap tersedia seperti sebelumnya.
+Contoh kejadian pos dalam latihan merupakan cerita rekaan pembelajaran.
+
+Syarat membuka level: ketiga latihan pemahaman harus tuntas (3/3 benar).
+Latihan dilakukan satu per satu. Tombol lanjut terkunci sebelum jawaban
+benar diperiksa. Jawaban keliru mendapat penjelasan dan bisa diperbaiki
+tanpa batas percobaan, tanpa mengurangi dana atau nyawa. Pemain dapat
+membaca rangkuman lagi tanpa kehilangan kemajuan latihan dalam sesi itu.
+
+Kelulusan berlaku untuk sesi yang sama, termasuk tombol Main Lagi.
+Kembali ke halaman awal atau memuat ulang akan mengulang persiapan.
+Tiga misi interaktif wajib pada level 1-3 tetap berlaku setelah latihan ini.
+
+Untuk mengubah latihan pembuka, edit PREPARATION_QUESTIONS pada
+assets/permainan.html. Rangkuman berada pada komponen PreparationScreen.
+
+MATERI DAN MISI WAJIB
+Level 1 - Pos Pemilah Informasi: pilah 6 kartu Fakta/Opini. Hadiah Rp60.000.
+Level 2 - Jembatan Kalimat: klik kalimat, lalu hubungkan dengan Fakta atau
+Opini. Enam kalimat harus dipasangkan dengan tepat. Hadiah Rp40.000.
+Level 3 - Detektif Cerita: baca paragraf Sabtu di Kebun Sekolah. Klik setiap
+kalimat, lalu tandai Fakta/Opini. Enam kalimat wajib tepat. Hadiah Rp40.000.
+Kalimat dapat dipilih kembali untuk memperbaiki klasifikasi.
+Misi level 1-3 wajib tuntas sebelum menyerang. Latihan ulang misi memberikan
+Rp15.000 per penyelesaian. Menutup misi mengosongkan susunan yang belum selesai.
+
+LEVEL 4 DAN 5 - PENILAIAN 30 SOAL
+Seluruh 30 soal berasal dari naskah pengguna, dengan nomor asli dipertahankan.
+Level 4: 15 soal pilihan ganda (nomor 1-5, 11-15, 21-25).
+Level 5: 15 soal pilihan ganda kompleks (nomor 6-10, 16-20, 26-30).
+Setiap level berisi 5 mudah, 5 sedang, dan 5 sulit. Pilih tingkat kesulitan
+melalui Cari Dana. Soal yang belum dinilai muncul secara berurutan.
+Wajib menjawab seluruh 15 soal pada level tersebut untuk membuka serangan,
+dan energi pasukan harus mencukupi. Jawaban salah tetap dihitung terjawab.
+Pilih jawaban lalu tekan Periksa Jawaban. Jawaban dapat diganti sebelumnya.
+Pilihan ganda: pilih satu. Kompleks: centang semua jawaban yang benar.
+Skor 1 hanya jika semua jawaban benar dipilih tanpa pilihan salah. Selain itu 0.
+Jawaban pertama yang diperiksa dicatat. Skor maksimal 30.
+Nilai akhir = (skor / 30) x 100, ditampilkan pada halaman kemenangan.
+Penjelasan dan kunci ditampilkan setelah jawaban diperiksa.
+Setelah 5 soal pada suatu tingkat selesai, latihan ulang tersedia untuk dana
+tanpa mengubah nilai. Hadiah benar: mudah Rp5.000, sedang Rp7.500, sulit Rp10.000.
+Kembali tanpa Menjawab tidak mencatat nilai dan soal tetap tersedia.
+Main Lagi mengulang misi dan penilaian. Memuat ulang menghapus progres sesi.
+Kunci untuk guru dan catatan soal 28 tersedia di KUNCI-JAWABAN.txt.
+
+CONTOH STRATEGI BELANJA
+Level 1: beli Aldi, Bima, dan Dini (energi 210).
+Level 2: tambah Eko dan Fani (energi total 360).
+Level 3: tambah Gilang (energi total 420, cukup sampai gelombang 5).
+Pemain bebas memilih strategi lain dan memperoleh dana dari latihan ulang.
+
+CATATAN MATERI
+Semua kejadian kota dalam misi adalah cerita rekaan untuk latihan.
+Fakta dapat dibuktikan; opini berisi pendapat, penilaian, saran, atau selera.
+Adanya angka atau kata "pasti" tidak otomatis membuktikan kebenaran.
+Klaim yang belum diperiksa perlu diverifikasi. Klaim yang salah tidak
+otomatis menjadi opini. Perhatikan isi, konteks, dan bukti suatu pernyataan.
+
+MENGEDIT MATERI
+Buka assets/permainan.html dengan editor teks. Bagian MISSIONS berisi kartu, pasangan,
+jenis kalimat, penjelasan, dan hadiah misi. Bagian QUESTION_BANK berisi soal level
+4-5. Simpan cadangan sebelum mengedit. Tidak diperlukan proses kompilasi
+untuk mengubah teks, nilai hadiah, atau isi data pada assets/permainan.html.
+
+KREDIT
+Ide Permainan oleh Abdul Rahmat, S.Pd
+SDN 011 Balikpapan Tengah
+Aset media disalin dari alamat yang tercantum pada aplikasi asli.
+Hak atas media tetap mengikuti pemilik/sumber masing-masing.
+
+PENGUJIAN VERSI LEVEL BARU
+Diuji di Chrome melalui file lokal dengan koneksi browser dimatikan.
+Alur rangkuman, latihan wajib, tiga misi, semua 30 soal, pembelian,
+latihan ulang, penguncian serangan, dan kemenangan berhasil diperiksa.
+Uji 27 jawaban benar dari 30 menghasilkan nilai 90,0. Pilihan kompleks
+yang kurang/berlebih mendapat skor 0; latihan ulang tidak mengubah nilai.
+Skala 16:9 diperiksa pada 1024x768, 844x390, 390x844, dan 1920x1080.
+Profil, gambar lokal, pengaturan volume, dan senyap berfungsi.
+Tidak ada permintaan HTTP/HTTPS atau galat halaman selama pengujian.
+
+TAMPILAN TOKO KOTA
+Kartu ditata enam kolom dengan bingkai mengikuti lebar gambar.
+Power terdapat pada sudut kanan atas bingkai gambar. Harga rupiah
+berada di bawah kartu gambar. Label MILIKMU muncul setelah karakter dibeli.

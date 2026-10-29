@@ -1,0 +1,2535 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <base href="../">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BERDAZI - Belajar perbedaan fakta dan opini melalui tiga misi interaktif. Versi offline.">
+  <title>BERDAZI - Fakta dan Opini (Offline)</title>
+  <link rel="icon" href="assets/gambar/logo-berdazi.png">
+  <link rel="stylesheet" href="assets/css/tampilan.css">
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <script src="assets/vendor/react.production.min.js"></script>
+  <script src="assets/vendor/react-dom.production.min.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 overflow-hidden">
+  <div id="root"></div>
+  <noscript>Aktifkan JavaScript pada browser untuk memainkan BERDAZI.</noscript>
+  <script>
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+
+// --- ICONS ---
+const IconWrapper = ({
+  children,
+  size = 24,
+  className = ""
+}) => /*#__PURE__*/React.createElement("svg", {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2",
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
+  className: className
+}, children);
+const Brain = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"
+}));
+const ShoppingBag = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M3 6h18"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M16 10a4 4 0 0 1-8 0"
+}));
+const ArrowRight = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "M5 12h14"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "m12 5 7 7-7 7"
+}));
+const Maximize = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "M8 3H5a2 2 0 0 0-2 2v3"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M21 8V5a2 2 0 0 0-2-2h-3"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M3 16v3a2 2 0 0 0 2 2h3"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M16 21h3a2 2 0 0 0 2-2v-3"
+}));
+const Minimize = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "M8 3v3a2 2 0 0 1-2 2H3"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M21 8h-3a2 2 0 0 1-2-2V3"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M3 16h3a2 2 0 0 1 2 2v3"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M16 21v-3a2 2 0 0 1 2-2h3"
+}));
+const X = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "M18 6 6 18"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "m6 6 12 12"
+}));
+const ChevronLeft = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "m15 18-6-6 6-6"
+}));
+const Sparkles = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M5 3v4"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M9 5h4"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M19 17v4"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M15 19h4"
+}));
+const Zap = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("polygon", {
+  points: "13 2 3 14 12 14 11 22 21 10 12 10 13 2"
+}));
+const Shield = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"
+}));
+const Skull = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("circle", {
+  cx: "9",
+  cy: "12",
+  r: "1"
+}), /*#__PURE__*/React.createElement("circle", {
+  cx: "15",
+  cy: "12",
+  r: "1"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M8 20v2h8v-2"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "m12.5 17-.5-1-.5 1h1z"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"
+}));
+const AlertTriangle = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: "12",
+  y1: "9",
+  x2: "12",
+  y2: "13"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: "12",
+  y1: "17",
+  x2: "12.01",
+  y2: "17"
+}));
+const CheckCircle = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "M22 11.08V12a10 10 0 1 1-5.93-9.14"
+}), /*#__PURE__*/React.createElement("polyline", {
+  points: "22 4 12 14.01 9 11.01"
+}));
+const Star = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("polygon", {
+  points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+}));
+const Award = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("circle", {
+  cx: "12",
+  cy: "8",
+  r: "7"
+}), /*#__PURE__*/React.createElement("polyline", {
+  points: "8.21 13.89 7 23 12 20 17 23 15.79 13.88"
+}));
+const User = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+}), /*#__PURE__*/React.createElement("circle", {
+  cx: "12",
+  cy: "7",
+  r: "4"
+}));
+const Play = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("polygon", {
+  points: "5 3 19 12 5 21 5 3"
+}));
+const Volume2 = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("polygon", {
+  points: "11 5 6 9 2 9 2 15 6 15 11 19 11 5"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M15.54 8.46a5 5 0 0 1 0 7.07"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M19.07 4.93a10 10 0 0 1 0 14.14"
+}));
+const VolumeX = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("polygon", {
+  points: "11 5 6 9 2 9 2 15 6 15 11 19 11 5"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: "23",
+  y1: "9",
+  x2: "17",
+  y2: "15"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: "17",
+  y1: "9",
+  x2: "23",
+  y2: "15"
+}));
+const Home = props => /*#__PURE__*/React.createElement(IconWrapper, props, /*#__PURE__*/React.createElement("path", {
+  d: "m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+}), /*#__PURE__*/React.createElement("polyline", {
+  points: "9 22 9 12 15 12 15 22"
+}));
+
+// --- DATA ---
+
+const QUESTION_BANK = {
+  "easy": [{
+    "id": 1,
+    "level": 4,
+    "type": "single",
+    "difficulty": "easy",
+    "q": "Pernyataan yang dapat dibuktikan kebenarannya disebut ....",
+    "options": ["saran", "fakta", "opini", "harapan"],
+    "answers": [1],
+    "explanation": "Fakta adalah informasi yang kebenarannya dapat dibuktikan."
+  }, {
+    "id": 2,
+    "level": 4,
+    "type": "single",
+    "difficulty": "easy",
+    "q": "Kalimat berikut yang merupakan opini adalah ....",
+    "options": ["Satu minggu terdiri atas tujuh hari.", "Segitiga memiliki tiga sisi.", "Satu jam terdiri atas 60 menit.", "Matematika adalah pelajaran paling menyenangkan."],
+    "answers": [3],
+    "explanation": "Paling menyenangkan adalah penilaian pribadi. Jumlah hari, sisi segitiga, dan menit dapat diperiksa."
+  }, {
+    "id": 3,
+    "level": 4,
+    "type": "single",
+    "difficulty": "easy",
+    "q": "Kalimat berikut yang merupakan fakta adalah ....",
+    "options": ["Satu meter sama dengan 100 sentimeter.", "Warna biru adalah warna paling indah.", "Bermain bola lebih seru daripada membaca.", "Mangga adalah buah paling enak."],
+    "answers": [0],
+    "explanation": "Kesetaraan satu meter dengan 100 sentimeter dapat dibuktikan melalui satuan ukuran."
+  }, {
+    "id": 4,
+    "level": 4,
+    "type": "single",
+    "difficulty": "easy",
+    "q": "“Menurut saya, taman sekolah kita sangat indah.”\nKalimat tersebut termasuk opini karena ....",
+    "options": ["menyebutkan sebuah tempat", "dapat dibuktikan dengan menghitung", "berisi penilaian pribadi", "menjelaskan waktu kegiatan"],
+    "answers": [2],
+    "explanation": "Menurut saya dan sangat indah menunjukkan penilaian pribadi pembicara."
+  }, {
+    "id": 5,
+    "level": 4,
+    "type": "single",
+    "difficulty": "easy",
+    "q": "“Di dalam kotak terdapat 12 pensil.”\nCara yang tepat untuk membuktikan pernyataan tersebut adalah ....",
+    "options": ["menanyakan warna pensil kesukaan teman", "menghitung pensil di dalam kotak", "membayangkan isi kotak", "memilih pensil yang paling bagus"],
+    "answers": [1],
+    "explanation": "Menghitung langsung memberi bukti apakah jumlah pensil benar-benar 12."
+  }, {
+    "id": 6,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "easy",
+    "q": "Pilih semua kalimat fakta berikut!",
+    "options": ["Satu hari terdiri atas 24 jam.", "Hari Minggu adalah hari paling menyenangkan.", "Persegi memiliki empat sisi.", "Menggambar lebih mudah daripada menyanyi."],
+    "answers": [0, 2],
+    "explanation": "Jumlah jam dalam sehari dan sisi persegi dapat dibuktikan. Kesenangan dan kemudahan merupakan penilaian."
+  }, {
+    "id": 7,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "easy",
+    "q": "Pilih semua kalimat opini berikut!",
+    "options": ["Es krim cokelat paling lezat.", "Satu tahun terdiri atas 12 bulan.", "Kelinci adalah hewan paling lucu.", "Menurut saya, membaca dongeng sangat mengasyikkan."],
+    "answers": [0, 2, 3],
+    "explanation": "Paling lezat, paling lucu, dan mengasyikkan merupakan penilaian atau selera pribadi."
+  }, {
+    "id": 8,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "easy",
+    "q": "Pilih semua cara yang tepat untuk memeriksa kebenaran suatu fakta!",
+    "options": ["Memilih pernyataan yang paling disukai.", "Menghitung jumlah benda yang disebutkan.", "Mengukur panjang benda dengan penggaris.", "Mengamati langsung kejadian yang dibicarakan."],
+    "answers": [1, 2, 3],
+    "explanation": "Menghitung, mengukur, dan mengamati langsung menghasilkan bukti. Menyukai pernyataan tidak membuktikannya."
+  }, {
+    "id": 9,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "easy",
+    "q": "Pilih semua kalimat yang berisi pendapat pribadi!",
+    "options": ["Satu kilogram sama dengan 1.000 gram.", "Menurut Rani, tas merah itu lebih menarik.", "Sebaiknya kelas dihias dengan bunga kertas.", "Segitiga memiliki tiga sudut."],
+    "answers": [1, 2],
+    "explanation": "Penilaian Rani dan saran menghias kelas adalah opini. Kesetaraan satuan dan jumlah sudut dapat dibuktikan."
+  }, {
+    "id": 10,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "easy",
+    "q": "Bacalah teks berikut!\nDi meja terdapat empat buku. Dua buku bersampul hijau. Menurut Lala, buku bersampul hijau terlihat paling cantik.\nPilih semua pernyataan fakta berdasarkan teks!",
+    "options": ["Di meja terdapat empat buku.", "Buku bersampul hijau paling cantik.", "Semua buku di meja sangat menarik.", "Dua buku bersampul hijau."],
+    "answers": [0, 3],
+    "explanation": "Jumlah empat buku dan dua sampul hijau tercantum pada teks. Paling cantik merupakan penilaian Lala."
+  }],
+  "medium": [{
+    "id": 11,
+    "level": 4,
+    "type": "single",
+    "difficulty": "medium",
+    "q": "Bacalah teks berikut!\nPerpustakaan kelas memiliki 40 buku. Sebanyak 15 buku merupakan buku cerita. Menurut Beni, buku cerita adalah bacaan paling menarik.\nPernyataan opini dalam teks tersebut adalah ....",
+    "options": ["Perpustakaan kelas memiliki buku.", "Perpustakaan kelas memiliki 40 buku.", "Sebanyak 15 buku merupakan buku cerita.", "Buku cerita adalah bacaan paling menarik."],
+    "answers": [3],
+    "explanation": "Bacaan paling menarik merupakan penilaian Beni. Jumlah buku dinyatakan sebagai data dalam teks."
+  }, {
+    "id": 12,
+    "level": 4,
+    "type": "single",
+    "difficulty": "medium",
+    "q": "“Di halaman sekolah tumbuh enam pohon mangga.”\nPernyataan tersebut termasuk fakta karena ....",
+    "options": ["semua orang menyukai pohon mangga", "jumlah pohonnya dapat diperiksa langsung", "pohon mangga membuat halaman paling indah", "kalimatnya berisi saran untuk sekolah"],
+    "answers": [1],
+    "explanation": "Jumlah enam pohon dapat diperiksa dengan pengamatan dan penghitungan langsung."
+  }, {
+    "id": 13,
+    "level": 4,
+    "type": "single",
+    "difficulty": "medium",
+    "q": "Kalimat berikut yang berisi saran adalah ....",
+    "options": ["Kegiatan membaca dimulai pukul 07.30.", "Ada tiga rak buku di kelas.", "Sebaiknya setiap kelas memiliki pojok baca.", "Rina meminjam dua buku cerita."],
+    "answers": [2],
+    "explanation": "Kata sebaiknya digunakan untuk menyampaikan saran mengenai pojok baca."
+  }, {
+    "id": 14,
+    "level": 4,
+    "type": "single",
+    "difficulty": "medium",
+    "q": "Bacalah teks berikut!\nSiswa kelas 5 menanam 20 bibit cabai. Mereka menggunakan empat pot besar. Menurut Dodi, kegiatan menanam adalah kegiatan paling menyenangkan.\nPernyataan fakta yang sesuai dengan teks adalah ....",
+    "options": ["Siswa menggunakan empat pot besar.", "Semua siswa paling suka menanam.", "Menanam lebih menyenangkan daripada olahraga.", "Tanaman cabai adalah tanaman paling indah."],
+    "answers": [0],
+    "explanation": "Penggunaan empat pot besar dinyatakan dalam teks. Pilihan lain berisi penilaian yang tidak didukung bacaan."
+  }, {
+    "id": 15,
+    "level": 4,
+    "type": "single",
+    "difficulty": "medium",
+    "q": "Perhatikan dua kalimat berikut!\n(1) Lapangan sekolah memiliki panjang 30 meter.\n(2) Lapangan sekolah adalah tempat bermain paling nyaman.\nPerbedaan kedua kalimat tersebut adalah ....",
+    "options": ["Kalimat (1) opini, sedangkan kalimat (2) fakta.", "Kedua kalimat merupakan fakta.", "Kalimat (1) fakta, sedangkan kalimat (2) opini.", "Kedua kalimat merupakan opini."],
+    "answers": [2],
+    "explanation": "Panjang 30 meter dapat diukur. Paling nyaman merupakan penilaian pribadi."
+  }, {
+    "id": 16,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "medium",
+    "q": "Bacalah teks berikut!\nKantin menjual nasi kuning seharga Rp5.000 per bungkus. Hari ini tersedia 25 bungkus nasi kuning. Menurut Sinta, nasi kuning di kantin paling lezat.\nPilih semua pernyataan fakta berdasarkan teks!",
+    "options": ["Nasi kuning kantin paling lezat.", "Harga nasi kuning Rp5.000 per bungkus.", "Semua siswa pasti menyukai nasi kuning kantin.", "Hari ini tersedia 25 bungkus nasi kuning."],
+    "answers": [1, 3],
+    "explanation": "Harga Rp5.000 dan persediaan 25 bungkus dinyatakan dalam bacaan. Selera tidak dapat disamakan untuk semua siswa."
+  }, {
+    "id": 17,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "medium",
+    "q": "Pilih semua kalimat opini berikut!",
+    "options": ["Antrean kantin sebaiknya dibuat lebih rapi.", "Menurut saya, ruang kelas itu terlalu sempit.", "Ruang kelas memiliki dua pintu.", "Hiasan kelas kita adalah yang paling bagus."],
+    "answers": [0, 1, 3],
+    "explanation": "Saran tentang antrean, penilaian terlalu sempit, dan paling bagus termasuk opini. Dua pintu dapat dihitung."
+  }, {
+    "id": 18,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "medium",
+    "q": "Riko berkata, “Panjang meja ini 120 sentimeter.”\nPilih semua tindakan yang tepat untuk memeriksa pernyataan Riko!",
+    "options": ["Menanyakan apakah teman menyukai meja tersebut.", "Menebak panjang meja dari tempat duduk.", "Mengukur panjang meja menggunakan meteran.", "Membandingkan hasil pengukuran dengan angka yang disebutkan Riko."],
+    "answers": [2, 3],
+    "explanation": "Gunakan meteran, lalu cocokkan hasil pengukuran dengan 120 sentimeter. Menebak atau menanyakan kesukaan tidak cukup."
+  }, {
+    "id": 19,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "medium",
+    "q": "Bacalah teks berikut!\nPameran kelas menampilkan 18 lukisan. Pameran dibuka pukul 09.00. Menurut Nisa, lukisan pemandangan adalah lukisan terbaik. Ia juga berpendapat bahwa ruang pameran terasa sangat nyaman.\nPilih semua opini yang terdapat dalam teks!",
+    "options": ["Pameran menampilkan 18 lukisan.", "Lukisan pemandangan adalah lukisan terbaik.", "Pameran dibuka pukul 09.00.", "Ruang pameran terasa sangat nyaman."],
+    "answers": [1, 3],
+    "explanation": "Lukisan terbaik dan ruang sangat nyaman merupakan penilaian Nisa. Jumlah lukisan dan waktu pembukaan adalah data."
+  }, {
+    "id": 20,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "medium",
+    "q": "Pilih semua pasangan kalimat dan jenis pernyataan yang tepat!",
+    "options": ["“Satu minggu terdiri atas tujuh hari.” — Fakta", "“Bersepeda adalah olahraga paling menyenangkan.” — Fakta", "“Menurut saya, cerita itu sangat menarik.” — Opini", "“Sebaiknya kita membawa botol minum sendiri.” — Opini"],
+    "answers": [0, 2, 3],
+    "explanation": "Jumlah hari adalah fakta. Penilaian menarik dan saran membawa botol adalah opini. Kesenangan bersepeda bukan fakta."
+  }],
+  "hard": [{
+    "id": 21,
+    "level": 4,
+    "type": "single",
+    "difficulty": "hard",
+    "q": "Bacalah teks berikut!\n(1) Pada hari Sabtu, kelas 5 mengadakan kerja bakti.\n(2) Sebanyak 28 siswa mengikuti kegiatan tersebut.\n(3) Menurut ketua kelas, kerja bakti kali ini paling menyenangkan.\n(4) Kegiatan berlangsung selama satu jam.\nKalimat opini ditunjukkan oleh nomor ....",
+    "options": ["(1)", "(2)", "(3)", "(4)"],
+    "answers": [2],
+    "explanation": "Kalimat (3) berisi penilaian ketua kelas. Waktu, jumlah peserta, dan durasi merupakan informasi faktual dalam teks."
+  }, {
+    "id": 22,
+    "level": 4,
+    "type": "single",
+    "difficulty": "hard",
+    "q": "Perhatikan kalimat berikut!\n“Taman sekolah memiliki sepuluh pot bunga yang sangat cantik.”\nBagian kalimat yang merupakan opini adalah ....",
+    "options": ["taman sekolah", "memiliki sepuluh pot", "sepuluh pot bunga", "sangat cantik"],
+    "answers": [3],
+    "explanation": "Sangat cantik merupakan penilaian. Jumlah sepuluh pot dapat diperiksa secara langsung."
+  }, {
+    "id": 23,
+    "level": 4,
+    "type": "single",
+    "difficulty": "hard",
+    "q": "Rani ingin menulis laporan berisi fakta. Kalimat manakah yang paling tepat dimasukkan ke dalam laporannya?",
+    "options": ["Lomba membaca puisi adalah lomba paling menarik.", "Berdasarkan daftar peserta, lomba membaca puisi diikuti 16 siswa.", "Semua penonton pasti senang menyaksikan lomba.", "Sebaiknya lomba membaca puisi diadakan setiap minggu."],
+    "answers": [1],
+    "explanation": "Daftar peserta menjadi bukti jumlah 16 siswa. Pilihan lain berisi penilaian, dugaan, atau saran."
+  }, {
+    "id": 24,
+    "level": 4,
+    "type": "single",
+    "difficulty": "hard",
+    "q": "Bacalah informasi berikut!\nBerdasarkan catatan peminjaman perpustakaan, buku cerita dipinjam 30 kali dan buku pengetahuan dipinjam 20 kali selama bulan Agustus.\nKesimpulan yang berupa fakta berdasarkan informasi tersebut adalah ....",
+    "options": ["Buku cerita lebih sering dipinjam daripada buku pengetahuan selama bulan Agustus.", "Buku cerita pasti lebih bagus daripada buku pengetahuan.", "Semua siswa lebih menyukai buku cerita.", "Buku pengetahuan terlalu membosankan untuk dibaca."],
+    "answers": [0],
+    "explanation": "Catatan menunjukkan 30 lebih besar daripada 20. Ini membuktikan frekuensi peminjaman, bukan kualitas buku atau kesukaan semua siswa."
+  }, {
+    "id": 25,
+    "level": 4,
+    "type": "single",
+    "difficulty": "hard",
+    "q": "Perhatikan kalimat berikut!\n“Menurut saya, perpustakaan sekolah adalah ruangan paling nyaman.”\nKalimat pengganti yang berupa fakta dan dapat diperiksa melalui pengamatan adalah ....",
+    "options": ["Perpustakaan sekolah sangat menyenangkan.", "Perpustakaan sekolah lebih menarik daripada ruang kelas.", "Sebaiknya perpustakaan sekolah diperluas.", "Perpustakaan sekolah memiliki enam meja baca."],
+    "answers": [3],
+    "explanation": "Enam meja baca dapat diamati dan dihitung. Nyaman, menyenangkan, dan menarik merupakan penilaian; sebaiknya menunjukkan saran."
+  }, {
+    "id": 26,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "hard",
+    "q": "Bacalah teks berikut!\nKelas 5 mengunjungi museum pada hari Selasa. Rombongan terdiri atas 30 siswa dan tiga guru. Kunjungan berlangsung selama dua jam. Menurut Arga, ruang fosil adalah bagian museum yang paling menarik.\nPilih semua pernyataan fakta yang sesuai dengan teks!",
+    "options": ["Rombongan terdiri atas 30 siswa dan tiga guru.", "Kunjungan berlangsung selama dua jam.", "Ruang fosil merupakan bagian museum paling menarik.", "Kunjungan dilakukan pada hari Selasa."],
+    "answers": [0, 1, 3],
+    "explanation": "Jumlah rombongan, durasi dua jam, dan hari Selasa dinyatakan dalam teks. Paling menarik adalah pendapat Arga."
+  }, {
+    "id": 27,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "hard",
+    "q": "Pilih semua kalimat yang memuat fakta sekaligus opini dalam satu kalimat!",
+    "options": ["Ada delapan gambar di papan pajangan kelas.", "Menurut saya, kegiatan menggambar sangat menyenangkan.", "Buku itu memiliki 60 halaman dan ceritanya paling seru.", "Taman itu memiliki lima bangku dan merupakan tempat paling nyaman untuk membaca."],
+    "answers": [2, 3],
+    "explanation": "C menggabungkan data 60 halaman dengan penilaian paling seru. D menggabungkan lima bangku dengan penilaian paling nyaman."
+  }, {
+    "id": 28,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "hard",
+    "q": "Perhatikan hasil pemungutan suara untuk memilih kegiatan kelas!\nPilih semua pernyataan fakta yang sesuai dengan tabel!",
+    "options": ["Membaca cerita dipilih oleh siswa paling banyak.", "Menyanyi adalah kegiatan yang paling membosankan.", "Jumlah seluruh suara pada tabel adalah 30.", "Menggambar lebih menyenangkan daripada menyanyi."],
+    "answers": [0, 2],
+    "explanation": "Membaca cerita memperoleh 12 suara, lebih banyak daripada 10 dan 8. Jumlahnya 12 + 10 + 8 = 30. Paling banyak di sini dapat dibuktikan dengan data, sehingga termasuk fakta.",
+    "table": {
+      "headers": ["Kegiatan", "Jumlah siswa yang memilih"],
+      "rows": [["Membaca cerita", "12"], ["Menggambar", "10"], ["Menyanyi", "8"]]
+    }
+  }, {
+    "id": 29,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "hard",
+    "q": "Bacalah teks berikut!\nDalam lomba kebersihan, kelas 5A mendapat nilai 90 dan kelas 5B mendapat nilai 85. Menurut Dita, hiasan kelas 5B lebih indah. Ia menyarankan agar kelas 5A menambah tanaman.\nPilih semua pernyataan yang tepat tentang teks tersebut!",
+    "options": ["Nilai kelas 5A lebih tinggi daripada kelas 5B merupakan fakta berdasarkan teks.", "Penilaian Dita bahwa hiasan kelas 5B lebih indah merupakan fakta.", "Saran untuk menambah tanaman merupakan opini.", "Selisih nilai kedua kelas adalah lima merupakan fakta berdasarkan teks."],
+    "answers": [0, 2, 3],
+    "explanation": "Nilai 90 lebih besar daripada 85 dan selisihnya lima. Lebih indah adalah pendapat Dita, sedangkan menambah tanaman adalah saran."
+  }, {
+    "id": 30,
+    "level": 5,
+    "type": "multiple",
+    "difficulty": "hard",
+    "q": "Seorang siswa menulis laporan berikut!\n(1) Kebun sekolah memiliki 12 tanaman tomat.\n(2) Tanaman tomat adalah tanaman paling menarik.\n(3) Sebaiknya semua kebun hanya ditanami tomat.\n(4) Pada hari Senin, siswa memanen delapan buah tomat.\nAgar laporan tersebut hanya berisi fakta, pilih semua kalimat yang perlu dihapus!",
+    "options": ["Kalimat (1)", "Kalimat (2)", "Kalimat (3)", "Kalimat (4)"],
+    "answers": [1, 2],
+    "explanation": "Kalimat (2) berisi penilaian paling menarik dan (3) berisi saran. Hapus keduanya agar kalimat (1) dan (4) yang faktual tetap ada."
+  }]
+};
+const ALL_QUESTIONS = Object.values(QUESTION_BANK).flat();
+const CHARACTERS = {
+  green: [{
+    id: 'aldi',
+    name: 'Aldi',
+    title: 'Pemimpin Benteng',
+    cost: 20000,
+    energy: 80,
+    img: 'assets/gambar/aldi.png',
+    color: 'from-green-400 to-emerald-600'
+  }, {
+    id: 'bima',
+    name: 'Bima',
+    title: 'Penjaga Gerbang',
+    cost: 20000,
+    energy: 70,
+    img: 'assets/gambar/bima.png',
+    color: 'from-green-400 to-emerald-600'
+  }, {
+    id: 'dini',
+    name: 'Dini',
+    title: 'Pengintai Cepat',
+    cost: 20000,
+    energy: 60,
+    img: 'assets/gambar/dini.png',
+    color: 'from-green-400 to-emerald-600'
+  }, {
+    id: 'eko',
+    name: 'Eko',
+    title: 'Penguat Benteng',
+    cost: 20000,
+    energy: 80,
+    img: 'assets/gambar/eko.png',
+    color: 'from-green-400 to-emerald-600'
+  }, {
+    id: 'fani',
+    name: 'Fani',
+    title: 'Pengatur Logistik',
+    cost: 20000,
+    energy: 70,
+    img: 'assets/gambar/fani.png',
+    color: 'from-green-400 to-emerald-600'
+  }, {
+    id: 'gilang',
+    name: 'Gilang',
+    title: 'Pengalih Perhatian',
+    cost: 20000,
+    energy: 60,
+    img: 'assets/gambar/gilang.png',
+    color: 'from-green-400 to-emerald-600'
+  }],
+  red: [{
+    id: 'raven',
+    name: 'Raven',
+    title: 'Ahli Strategi',
+    cost: 50000,
+    energy: 120,
+    img: 'assets/gambar/raven.png',
+    color: 'from-red-500 to-rose-700'
+  }, {
+    id: 'arga',
+    name: 'Arga',
+    title: 'Jagoan Benteng',
+    cost: 50000,
+    energy: 120,
+    img: 'assets/gambar/arga.png',
+    color: 'from-red-500 to-rose-700'
+  }, {
+    id: 'mira',
+    name: 'Mira',
+    title: 'Kepala Kesehatan',
+    cost: 50000,
+    energy: 120,
+    img: 'assets/gambar/mira.png',
+    color: 'from-red-500 to-rose-700'
+  }, {
+    id: 'zaki',
+    name: 'Zaki',
+    title: 'Ahli Tata Kota',
+    cost: 50000,
+    energy: 120,
+    img: 'assets/gambar/zaki.png',
+    color: 'from-red-500 to-rose-700'
+  }, {
+    id: 'fina',
+    name: 'Fina',
+    title: 'Pakar Kreatif',
+    cost: 50000,
+    energy: 120,
+    img: 'assets/gambar/fina.png',
+    color: 'from-red-500 to-rose-700'
+  }, {
+    id: 'rizky',
+    name: 'Rizky',
+    title: 'Si Kilat',
+    cost: 50000,
+    energy: 120,
+    img: 'assets/gambar/rizky.png',
+    color: 'from-red-500 to-rose-700'
+  }],
+  yellow: [{
+    id: 'arya',
+    name: 'Arya',
+    title: 'Penjaga Cahaya',
+    cost: 120000,
+    energy: 200,
+    effect: 'Semua karakter +30 energi',
+    img: 'assets/gambar/arya.png',
+    color: 'from-yellow-400 to-amber-600'
+  }, {
+    id: 'suri',
+    name: 'Suri',
+    title: 'Penjaga Alam',
+    cost: 120000,
+    energy: 200,
+    effect: 'Bonus energi perlengkapan',
+    img: 'assets/gambar/suri.png',
+    color: 'from-yellow-400 to-amber-600'
+  }, {
+    id: 'reno',
+    name: 'Reno',
+    title: 'Penjaga Waktu',
+    cost: 120000,
+    energy: 200,
+    effect: 'Ketahanan perlengkapan',
+    img: 'assets/gambar/reno.png',
+    color: 'from-yellow-400 to-amber-600'
+  }]
+};
+const EQUIPMENTS = [{
+  id: 'l1_pagar',
+  name: 'Pagar Kayu Kota',
+  level: 1,
+  cost: 5000,
+  energy: 20,
+  img: 'assets/gambar/l1_pagar.png',
+  color: 'from-blue-400 to-blue-600'
+}, {
+  id: 'l1_parit',
+  name: 'Parit Pertahanan',
+  level: 1,
+  cost: 5000,
+  energy: 20,
+  img: 'assets/gambar/l1_parit.png',
+  color: 'from-blue-400 to-blue-600'
+}, {
+  id: 'l1_rambu',
+  name: 'Rambu Pengalih',
+  level: 1,
+  cost: 5000,
+  energy: 20,
+  img: 'assets/gambar/l1_rambu.png',
+  color: 'from-blue-400 to-blue-600'
+}, {
+  id: 'l2_tembok',
+  name: 'Tembok Penjaga',
+  level: 2,
+  cost: 10000,
+  energy: 40,
+  img: 'assets/gambar/l2_tembok.png',
+  color: 'from-blue-400 to-blue-600'
+}, {
+  id: 'l2_menara',
+  name: 'Menara Pengawas',
+  level: 2,
+  cost: 10000,
+  energy: 40,
+  img: 'assets/gambar/l2_menara.png',
+  color: 'from-blue-400 to-blue-600'
+}, {
+  id: 'l2_alarm',
+  name: 'Alarm Kota',
+  level: 2,
+  cost: 10000,
+  energy: 40,
+  img: 'assets/gambar/l2_alarm.png',
+  color: 'from-blue-400 to-blue-600'
+}, {
+  id: 'l3_benteng',
+  name: 'Benteng Kota Ceria',
+  level: 3,
+  cost: 15000,
+  energy: 70,
+  img: 'assets/gambar/l3_benteng.png',
+  color: 'from-blue-400 to-blue-600'
+}, {
+  id: 'l3_tungku',
+  name: 'Tungku Cahaya',
+  level: 3,
+  cost: 15000,
+  energy: 70,
+  img: 'assets/gambar/l3_tungku.png',
+  color: 'from-blue-400 to-blue-600'
+}, {
+  id: 'l3_bola',
+  name: 'Bola Tanaman Berduri',
+  level: 3,
+  cost: 15000,
+  energy: 70,
+  img: 'assets/gambar/l3_bola.png',
+  color: 'from-blue-400 to-blue-600'
+}];
+const ZOMBIE_IMGS = {
+  tersesat: 'assets/gambar/zombie-tersesat.png',
+  ngantuk: 'assets/gambar/zombie-ngantuk.png',
+  pemalu: 'assets/gambar/zombie-pemalu.png',
+  zirah: 'assets/gambar/zombie-zirah.png',
+  profesor: 'assets/gambar/zombie-profesor.png',
+  raja: 'assets/gambar/zombie-raja.png'
+};
+const ZOMBIE_WAVES = [
+// Level 1: Total 180
+[{
+  name: 'Zombie Tersesat',
+  energy: 50,
+  img: ZOMBIE_IMGS.tersesat
+}, {
+  name: 'Zombie Ngantuk',
+  energy: 70,
+  img: ZOMBIE_IMGS.ngantuk
+}, {
+  name: 'Zombie Pemalu',
+  energy: 60,
+  img: ZOMBIE_IMGS.pemalu
+}],
+// Level 2: Total 230
+[{
+  name: 'Zombie Tersesat',
+  energy: 50,
+  img: ZOMBIE_IMGS.tersesat
+}, {
+  name: 'Zombie Pemalu',
+  energy: 60,
+  img: ZOMBIE_IMGS.pemalu
+}, {
+  name: 'Zombie Zirah',
+  energy: 120,
+  img: ZOMBIE_IMGS.zirah
+}],
+// Level 3: Total 250
+[{
+  name: 'Zombie Ngantuk',
+  energy: 70,
+  img: ZOMBIE_IMGS.ngantuk
+}, {
+  name: 'Zombie Zirah',
+  energy: 120,
+  img: ZOMBIE_IMGS.zirah
+}, {
+  name: 'Zombie Pemalu',
+  energy: 60,
+  img: ZOMBIE_IMGS.pemalu
+}],
+// Level 4: Total 330
+[{
+  name: 'Zombie Pemalu',
+  energy: 60,
+  img: ZOMBIE_IMGS.pemalu
+}, {
+  name: 'Profesor Zombie',
+  energy: 150,
+  img: ZOMBIE_IMGS.profesor
+}, {
+  name: 'Zombie Zirah',
+  energy: 120,
+  img: ZOMBIE_IMGS.zirah
+}],
+// Level 5: Total 420
+[{
+  name: 'Zombie Ngantuk',
+  energy: 70,
+  img: ZOMBIE_IMGS.ngantuk
+}, {
+  name: 'Profesor Zombie',
+  energy: 150,
+  img: ZOMBIE_IMGS.profesor
+}, {
+  name: 'Raja Zombie',
+  energy: 200,
+  img: ZOMBIE_IMGS.raja
+}]];
+const QUIZ_REWARDS = {
+  easy: 5000,
+  medium: 7500,
+  hard: 10000
+};
+const BACKSONG_URL = "assets/audio/musik-berdazi.mp3";
+
+// --- COMPONENTS ---
+
+const Card = ({
+  item,
+  onClick,
+  disabled,
+  owned
+}) => /*#__PURE__*/React.createElement("button", {
+  type: "button",
+  onClick: onClick,
+  disabled: disabled,
+  className: 'shop-product ' + (owned ? 'is-owned ' : '') + (disabled ? 'is-unavailable' : ''),
+  "aria-label": `${item.name}, power ${item.energy}, harga Rp ${item.cost.toLocaleString('id-ID')}${owned ? ', sudah dimiliki' : ''}`
+}, /*#__PURE__*/React.createElement("span", {
+  className: "shop-card-art"
+}, owned && /*#__PURE__*/React.createElement("span", {
+  className: "shop-owned"
+}, /*#__PURE__*/React.createElement(CheckCircle, {
+  size: 12
+}), " MILIKMU"), /*#__PURE__*/React.createElement("span", {
+  className: "shop-power",
+  title: `Power ${item.energy}`
+}, /*#__PURE__*/React.createElement(Zap, {
+  size: 15
+}), /*#__PURE__*/React.createElement("b", null, item.energy)), /*#__PURE__*/React.createElement("img", {
+  src: item.img,
+  alt: item.name
+})), /*#__PURE__*/React.createElement("span", {
+  className: "shop-product-name"
+}, item.name), /*#__PURE__*/React.createElement("span", {
+  className: "shop-product-price"
+}, "Rp ", item.cost.toLocaleString('id-ID')), disabled && /*#__PURE__*/React.createElement("span", {
+  className: "shop-product-limit"
+}, "Batas perlengkapan tercapai"));
+
+const hE = React.createElement;
+const OP_RE = /(menurut saya|sebaiknya|seharusnya|paling|sangat|terlalu|terbaik|terindah|cantik|indah|lezat|enak|nyaman|menarik|menyenangkan|bagus|lucu|seru|mengasyikkan|membosankan|kurang)/gi;
+const DATA_RE = /(\d+[\d.,]*(?:\s?(?:meter|sentimeter|menit|jam|hari|buku|pohon|pot|siswa|suara|halaman|bangku))?)/gi;
+const hl = text => String(text).split(OP_RE).map((part, i) => i % 2 ? hE('mark', {key: i, className: 'hl-op'}, part) : String(part).split(DATA_RE).map((q, j) => j % 2 ? hE('mark', {key: i + '-' + j, className: 'hl-data'}, q) : q));
+const DEFENSE_POOL = {
+  tersesat: [['Kota ini punya 4 gerbang.', 'F', 'Jumlah gerbang dapat dihitung.'], ['Gerbang timur paling indah.', 'O', 'Kata paling indah menunjukkan penilaian.'], ['Satu hari ada 24 jam.', 'F', 'Dapat dibuktikan dengan jam.']],
+  ngantuk: [['Lapangan itu panjangnya 30 meter.', 'F', 'Panjang dapat diukur dengan meteran.'], ['Tidur siang itu menyenangkan.', 'O', 'Menyenangkan adalah perasaan pribadi.'], ['Ada 12 pensil di kotak.', 'F', 'Jumlah dapat dihitung langsung.']],
+  pemalu: [['Lapangan sekolah terlalu kecil.', 'O', 'Tanpa kata sebaiknya pun, kata terlalu adalah penilaian (opini tersembunyi).'], ['Pelajaran itu membosankan.', 'O', 'Membosankan adalah penilaian pribadi.'], ['Pojok baca punya 6 meja.', 'F', 'Jumlah meja dapat diamati.']],
+  zirah: [['Kelas 5C mendapat suara paling banyak, yaitu 12 suara.', 'F', 'Kata paling di sini didukung data jumlah suara, jadi fakta.'], ['Sebaiknya kita menanam 10 pot lagi.', 'O', 'Kata sebaiknya menandakan saran, walau ada angka.'], ['Nilai 90 lebih besar daripada 85.', 'F', 'Perbandingan angka dapat dibuktikan.']],
+  profesor: [['Satu meter sama dengan 10 sentimeter.', 'F', 'Klaim ini dapat diperiksa (hasilnya salah: 1 meter = 100 sentimeter). Klaim salah tidak otomatis opini.'], ['Segitiga memiliki 4 sisi.', 'F', 'Dapat diperiksa dengan menghitung sisi. Klaimnya salah, tetapi tetap fakta yang dapat diuji.'], ['Buku sains pasti paling bagus.', 'O', 'Paling bagus adalah penilaian.']],
+  raja: [['Perpustakaan dibuka pukul 07.00.', 'F', 'Waktu buka dapat dicek di catatan.'], ['Lukisan di dinding itu terbaik.', 'O', 'Terbaik adalah penilaian.'], ['Ada 5 bangku di taman.', 'F', 'Jumlah dapat dihitung.'], ['Sebaiknya anak membawa botol minum.', 'O', 'Sebaiknya menandakan saran.']]
+};
+const zKey = z => /Raja/.test(z.name) ? 'raja' : /Profesor/.test(z.name) ? 'profesor' : /Zirah/.test(z.name) ? 'zirah' : /Pemalu/.test(z.name) ? 'pemalu' : /Ngantuk/.test(z.name) ? 'ngantuk' : 'tersesat';
+const DefensePhase = ({wave, chars, onWin, onLose}) => {
+  const [queue] = useState(() => wave.flatMap(z => DEFENSE_POOL[zKey(z)].slice().sort(() => Math.random() - .5).slice(0, zKey(z) === 'raja' ? 3 : 2).map(q => ({z, q}))));
+  const has = id => chars.some(c => c.id === id);
+  const [hp, setHp] = useState(3 + (has('bima') ? 1 : 0));
+  const [i, setI] = useState(0);
+  const [fb, setFb] = useState(null);
+  const cur = queue[i];
+  const answer = a => { if (fb) return; const ok = a === cur.q[1]; if (!ok) setHp(h => h - 1); setFb({ok}); };
+  const next = () => { if (hp <= 0) return onLose(); if (i + 1 >= queue.length) return onWin(); setFb(null); setI(i + 1); };
+  return hE('div', {className: 'mission-overlay', role: 'dialog', 'aria-modal': 'true'}, hE('section', {className: 'df-panel'},
+    hE('div', {className: 'df-top'}, hE('b', null, 'BENTENG: ' + '\u2764\uFE0F'.repeat(Math.max(hp, 0)) + '\uD83D\uDDA4'.repeat(Math.max(3 + (has('bima') ? 1 : 0) - hp, 0))), hE('span', null, 'Zombie ' + (i + 1) + '/' + queue.length)),
+    hE('img', {src: cur.z.img, alt: cur.z.name, className: 'df-zombie' + (fb && fb.ok ? ' df-hit' : fb ? ' df-bite' : '')}),
+    hE('h3', null, cur.z.name), hE('p', {className: 'df-sentence'}, '\u201C' + cur.q[0] + '\u201D'),
+    has('aldi') && !fb && hE('p', {className: 'df-hint'}, 'Petunjuk Aldi: cari kata penanda dan tanyakan, bisakah dibuktikan?'),
+    !fb ? hE('div', {className: 'df-btns'}, hE('button', {className: 'df-f', onClick: () => answer('F')}, 'FAKTA'), hE('button', {className: 'df-o', onClick: () => answer('O')}, 'OPINI')) :
+      hE('div', {className: 'df-fb'}, hE('strong', null, fb.ok ? 'Tepat! Zombie terpental.' : 'Salah! Benteng retak.'), hE('p', null, hl(cur.q[2])), hE('button', {className: 'df-next', onClick: next}, hp <= 0 ? 'Benteng runtuh, coba lagi' : i + 1 >= queue.length ? 'Selamatkan Kota!' : 'Zombie berikutnya'))));
+};
+const Rapor = ({results, name}) => {
+  const rows = []; Object.keys(QUESTION_BANK).forEach(d => QUESTION_BANK[d].forEach(q => { const r = results[q.id]; rows.push({id: q.id, level: q.level, d, q: q.q, ok: r ? (r.correct ? 1 : 0) : null}); }));
+  const sum = f => { const a = rows.filter(f); return a.filter(r => r.ok === 1).length + '/' + a.length; };
+  const wrong = rows.filter(r => r.ok === 0);
+  const dl = () => { const csv = 'Nama,No,Level,Tingkat,Skor,Soal\n' + rows.map(r => [name, r.id, r.level, r.d, r.ok === null ? '' : r.ok, '"' + r.q.replace(/"/g, '""') + '"'].join(',')).join('\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], {type: 'text/csv'})); a.download = 'rapor-' + name + '.csv'; a.click(); };
+  return hE('div', {className: 'rapor'}, hE('h3', null, 'RAPOR KOMANDAN ' + name), hE('div', {className: 'rapor-grid'},
+    ['Level 4 (pilihan ganda)|r.level===4', 'Level 5 (kompleks)|r.level===5', 'Mudah|r.d==="easy"', 'Sedang|r.d==="medium"', 'Sulit|r.d==="hard"'].map(t => { const [l, e] = t.split('|'); return hE('div', {key: l}, hE('strong', null, sum(new Function('r', 'return ' + e))), hE('small', null, l)); })),
+    hE('p', null, wrong.length ? 'Soal perlu diulang: no. ' + wrong.map(r => r.id).join(', ') : 'Semua soal terjawab benar!'),
+    hE('button', {onClick: dl, className: 'df-next'}, 'Unduh Rapor (CSV)'), hE('button', {onClick: () => window.print(), className: 'df-next'}, 'Cetak Sertifikat / Rapor'));
+};
+const ZombieCard = ({
+  item
+}) => /*#__PURE__*/React.createElement("div", {
+  className: "zombie-card bg-gradient-to-b from-white to-red-50/50 rounded-2xl p-2 border border-red-100 shadow-lg flex flex-col items-center w-36 md:w-48 shrink-0 relative group"
+}, /*#__PURE__*/React.createElement("div", {
+  className: "absolute -top-2 -right-2 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-md z-10 animate-bounce delay-700"
+}, "!"), /*#__PURE__*/React.createElement("div", {
+  className: "w-full h-24 md:h-28 rounded-xl overflow-hidden mb-2 relative"
+}, /*#__PURE__*/React.createElement("div", {
+  className: "absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-0"
+}), /*#__PURE__*/React.createElement("img", {
+  src: item.img,
+  alt: item.name,
+  className: "w-full h-full object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-500"
+})), /*#__PURE__*/React.createElement("div", {
+  className: "text-xs font-bold text-slate-800 text-center leading-tight truncate w-full px-1"
+}, item.name), /*#__PURE__*/React.createElement("div", {
+  className: "mt-2 w-full bg-red-100/80 text-red-700 py-1 rounded-lg text-[10px] md:text-xs font-bold flex items-center justify-center gap-1"
+}, /*#__PURE__*/React.createElement(Zap, {
+  size: 12
+}), " ", item.energy));
+
+// Tampilan Inventory Mini (Diperbesar)
+const MiniCard = ({
+  item
+}) => /*#__PURE__*/React.createElement("div", {
+  className: "troop-card bg-white rounded-xl border border-slate-200 shadow-sm w-24 h-36 md:w-28 md:h-40 flex flex-col items-center p-1 shrink-0 overflow-hidden relative hover:scale-105 transition-transform duration-300 group"
+}, /*#__PURE__*/React.createElement("div", {
+  className: `absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r ${item.color}`
+}), /*#__PURE__*/React.createElement("div", {
+  className: "w-full h-full rounded-lg overflow-hidden relative"
+}, /*#__PURE__*/React.createElement("img", {
+  src: item.img,
+  alt: item.name,
+  className: "w-full h-full object-contain"
+}), /*#__PURE__*/React.createElement("div", {
+  className: "absolute top-0 left-0 w-full h-full bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity"
+}), /*#__PURE__*/React.createElement("div", {
+  className: "absolute bottom-2 left-0 w-full text-center text-xs font-bold text-slate-800 bg-white/80 py-1 backdrop-blur-sm"
+}, item.name)));
+const LEVEL_META = [{
+  title: 'Pos Pemilah Informasi',
+  task: 'Pilah kartu fakta dan opini untuk mendapatkan dana pertama.'
+}, {
+  title: 'Jembatan Kalimat',
+  task: 'Jodohkan setiap kalimat dengan jenis Fakta atau Opini.'
+}, {
+  title: 'Detektif Cerita',
+  task: 'Baca paragraf, lalu tentukan jenis setiap kalimat.'
+}, {
+  title: 'Akademi Fakta',
+  task: 'Jawab 15 soal pilihan ganda: mudah, sedang, dan sulit.'
+}, {
+  title: 'Ujian Komandan',
+  task: 'Jawab 15 soal kompleks. Pilih semua jawaban yang benar.'
+}];
+const MISSIONS = [{
+  title: 'Pos Pemilah Informasi',
+  subtitle: 'Pilah kartu fakta dan opini',
+  reward: 60000,
+  story: 'Catatan pos: tersedia 12 kotak obat, gerbang dibuka pukul 07.00, dan Aldi bertugas di menara. Kejadian dalam misi ini merupakan cerita rekaan.',
+  items: [{
+    text: 'Pos memiliki 12 kotak obat.',
+    answer: 'fakta',
+    reason: 'Jumlah kotak didukung catatan pos.'
+  }, {
+    text: 'Menara adalah tempat paling menyenangkan.',
+    answer: 'opini',
+    reason: 'Paling menyenangkan merupakan penilaian pribadi.'
+  }, {
+    text: 'Gerbang dibuka pukul 07.00.',
+    answer: 'fakta',
+    reason: 'Waktu pembukaan tercantum dalam catatan.'
+  }, {
+    text: 'Menurutku, Aldi penjaga paling keren.',
+    answer: 'opini',
+    reason: 'Paling keren merupakan pendapat pembicara.'
+  }, {
+    text: 'Aldi bertugas di menara.',
+    answer: 'fakta',
+    reason: 'Penugasan Aldi dapat diperiksa pada catatan.'
+  }, {
+    text: 'Sebaiknya pagar kota dicat biru.',
+    answer: 'opini',
+    reason: 'Sebaiknya menunjukkan saran.'
+  }]
+}, {
+  title: 'Jembatan Kalimat',
+  subtitle: 'Menjodohkan kalimat fakta dan opini',
+  reward: 40000,
+  story: 'Klik satu kalimat di sebelah kiri, lalu klik Fakta atau Opini di sebelah kanan. Garis menunjukkan pasanganmu. Kamu boleh memperbaiki pasangan sebelum memeriksanya.',
+  items: [{
+    text: 'Satu minggu terdiri atas tujuh hari.',
+    answer: 'fakta',
+    reason: 'Jumlah hari dalam satu minggu dapat dibuktikan.'
+  }, {
+    text: 'Membaca dongeng adalah kegiatan paling seru.',
+    answer: 'opini',
+    reason: 'Paling seru merupakan penilaian pribadi.'
+  }, {
+    text: 'Sebaiknya kelas dihias dengan bunga kertas.',
+    answer: 'opini',
+    reason: 'Kalimat ini berisi saran.'
+  }, {
+    text: 'Satu meter sama dengan 100 sentimeter.',
+    answer: 'fakta',
+    reason: 'Kesetaraan satuan panjang dapat diperiksa.'
+  }, {
+    text: 'Segitiga memiliki tiga sisi.',
+    answer: 'fakta',
+    reason: 'Jumlah sisi segitiga dapat dihitung.'
+  }, {
+    text: 'Menurutku, warna hijau paling indah.',
+    answer: 'opini',
+    reason: 'Keindahan warna merupakan selera pribadi.'
+  }]
+}, {
+  title: 'Detektif Cerita',
+  subtitle: 'Temukan fakta dan opini dalam paragraf',
+  reward: 40000,
+  story: 'Bacalah paragraf berikut. Fakta pada cerita dinilai berdasarkan informasi yang disajikan. Klik setiap kalimat, lalu tandai sebagai Fakta atau Opini.',
+  items: [{
+    text: 'Pada hari Sabtu, siswa kelas 5 merawat kebun sekolah.',
+    answer: 'fakta',
+    reason: 'Waktu dan kegiatan dilaporkan sebagai kejadian dalam cerita.'
+  }, {
+    text: 'Mereka menanam 20 bibit cabai di empat pot besar.',
+    answer: 'fakta',
+    reason: 'Jumlah bibit dan pot merupakan informasi yang dapat dihitung.'
+  }, {
+    text: 'Menurut Rani, kebun sekolah adalah tempat paling indah.',
+    answer: 'opini',
+    reason: 'Paling indah merupakan penilaian Rani.'
+  }, {
+    text: 'Kegiatan berlangsung selama satu jam.',
+    answer: 'fakta',
+    reason: 'Lama kegiatan dinyatakan sebagai informasi faktual dalam cerita.'
+  }, {
+    text: 'Beni merasa berkebun lebih menyenangkan daripada bermain bola.',
+    answer: 'opini',
+    reason: 'Perbandingan kesenangan merupakan pendapat pribadi Beni.'
+  }, {
+    text: 'Sebaiknya setiap kelas memiliki kebun kecil.',
+    answer: 'opini',
+    reason: 'Kalimat terakhir berisi saran.'
+  }]
+}];
+function MissionPanel({
+  level,
+  completed,
+  onReward,
+  onClose
+}) {
+  const mission = MISSIONS[level];
+  const [placements, setPlacements] = useState({});
+  const [selected, setSelected] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+  const [claimed, setClaimed] = useState(false);
+  const claimedRef = useRef(false);
+  const reward = useRef(completed ? 15000 : mission.reward).current;
+  const assign = (type, index = selected) => {
+    if (index === null || claimed) return;
+    setPlacements(p => ({
+      ...p,
+      [index]: type
+    }));
+    setSelected(null);
+    setFeedback(null);
+  };
+  const choose = i => {
+    setSelected(i);
+    setFeedback(null);
+  };
+  const check = () => {
+    if (claimedRef.current) return;
+    const mistakes = mission.items.flatMap((item, i) => placements[i] === item.answer ? [] : [{
+      text: item.text,
+      reason: item.reason
+    }]);
+    if (mistakes.length) {
+      setFeedback(mistakes);
+      return;
+    }
+    claimedRef.current = true;
+    setClaimed(true);
+    setFeedback(null);
+    onReward(reward);
+  };
+  const targets = ['fakta', 'opini'];
+  const labels = {
+    fakta: 'FAKTA',
+    opini: 'OPINI'
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "mission-overlay",
+    role: "dialog",
+    "aria-modal": "true",
+    "aria-labelledby": "mission-title"
+  }, /*#__PURE__*/React.createElement("section", {
+    className: "mission-panel updated-mission"
+  }, /*#__PURE__*/React.createElement("header", {
+    className: "mission-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", {
+    className: "mission-eyebrow"
+  }, "BAHASA INDONESIA \xB7 LEVEL ", level + 1, " \xB7 MISI WAJIB"), /*#__PURE__*/React.createElement("h2", {
+    id: "mission-title"
+  }, mission.title), /*#__PURE__*/React.createElement("p", null, mission.subtitle)), /*#__PURE__*/React.createElement("button", {
+    className: "mission-close",
+    onClick: onClose,
+    "aria-label": "Kembali ke kota"
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "mission-content"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "mission-story"
+  }, mission.story), claimed ? /*#__PURE__*/React.createElement("div", {
+    className: "mission-success",
+    role: "status"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mission-success-icon"
+  }, "\u2713"), /*#__PURE__*/React.createElement("h3", null, "Misi tuntas!"), /*#__PURE__*/React.createElement("p", null, "Semua kalimat sudah kamu kelompokkan dengan tepat."), /*#__PURE__*/React.createElement("strong", null, "+Rp ", reward.toLocaleString('id-ID')), /*#__PURE__*/React.createElement("button", {
+    className: "mission-primary",
+    onClick: onClose
+  }, "Kembali ke Kota")) : /*#__PURE__*/React.createElement(React.Fragment, null, level === 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("p", {
+    className: "mission-help"
+  }, "Seret kartu ke kelompoknya, atau klik kartu lalu klik kelompok tujuan."), /*#__PURE__*/React.createElement("div", {
+    className: "mission-columns"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mission-cards"
+  }, mission.items.map((item, i) => /*#__PURE__*/React.createElement("button", {
+    key: i,
+    "data-card": i,
+    className: 'mission-card ' + (selected === i ? 'is-selected ' : '') + (placements[i] ? 'is-placed' : ''),
+    draggable: true,
+    onDragStart: e => {
+      e.dataTransfer.setData('text/plain', String(i));
+      choose(i);
+    },
+    "aria-pressed": selected === i,
+    onClick: () => choose(i)
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mission-card-number"
+  }, i + 1), /*#__PURE__*/React.createElement("span", null, item.text, placements[i] && /*#__PURE__*/React.createElement("small", null, "Dipilih: ", labels[placements[i]]))))), /*#__PURE__*/React.createElement("div", {
+    className: "mission-targets"
+  }, targets.map(type => /*#__PURE__*/React.createElement("button", {
+    key: type,
+    "data-target": type,
+    className: "mission-target",
+    onClick: () => assign(type),
+    onDragOver: e => e.preventDefault(),
+    onDrop: e => {
+      e.preventDefault();
+      const raw = e.dataTransfer.getData('text/plain');
+      if (/^\d+$/.test(raw) && Number(raw) < mission.items.length) assign(type, Number(raw));
+    }
+  }, /*#__PURE__*/React.createElement("strong", null, labels[type]), /*#__PURE__*/React.createElement("small", null, type === 'fakta' ? 'Dapat dibuktikan kebenarannya' : 'Pendapat, penilaian, atau saran'), mission.items.map((item, i) => placements[i] === type ? /*#__PURE__*/React.createElement("span", {
+    className: "mission-chip",
+    key: i
+  }, i + 1, ". ", item.text) : null)))))), level === 1 && /*#__PURE__*/React.createElement("div", {
+    className: "matching-board"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "matching-statements"
+  }, mission.items.map((item, i) => /*#__PURE__*/React.createElement("button", {
+    className: 'matching-sentence ' + (selected === i ? 'selected' : ''),
+    key: i,
+    "data-card": i,
+    "aria-pressed": selected === i,
+    onClick: () => choose(i)
+  }, /*#__PURE__*/React.createElement("b", null, i + 1), /*#__PURE__*/React.createElement("span", null, item.text), /*#__PURE__*/React.createElement("small", {
+    className: placements[i] || ''
+  }, placements[i] ? labels[placements[i]] : 'Belum dipasangkan')))), /*#__PURE__*/React.createElement("div", {
+    className: "matching-lines",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 100 360",
+    preserveAspectRatio: "none"
+  }, mission.items.map((_, i) => placements[i] ? /*#__PURE__*/React.createElement("path", {
+    key: i,
+    d: `M 0 ${i * 60 + 30} C 50 ${i * 60 + 30}, 50 ${placements[i] === 'fakta' ? 90 : 270}, 100 ${placements[i] === 'fakta' ? 90 : 270}`,
+    fill: "none",
+    stroke: placements[i] === 'fakta' ? '#059669' : '#d97706',
+    strokeWidth: "2.5"
+  }) : null))), /*#__PURE__*/React.createElement("div", {
+    className: "matching-types"
+  }, targets.map(type => /*#__PURE__*/React.createElement("button", {
+    className: 'matching-type ' + type,
+    key: type,
+    "data-target": type,
+    onClick: () => assign(type)
+  }, /*#__PURE__*/React.createElement("span", null, type === 'fakta' ? '✓' : '✦'), /*#__PURE__*/React.createElement("strong", null, labels[type]), /*#__PURE__*/React.createElement("small", null, type === 'fakta' ? 'Dapat dibuktikan' : 'Pendapat atau penilaian'), /*#__PURE__*/React.createElement("em", null, Object.values(placements).filter(v => v === type).length, " kalimat terhubung"))))), level === 2 && /*#__PURE__*/React.createElement("div", {
+    className: "story-classification"
+  }, /*#__PURE__*/React.createElement("article", {
+    className: "story-paper"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "mission-eyebrow"
+  }, "CERITA KELAS 5"), /*#__PURE__*/React.createElement("h3", null, "Sabtu di Kebun Sekolah"), /*#__PURE__*/React.createElement("p", {
+    className: "story-paragraph"
+  }, mission.items.map((item, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    role: "button",
+    tabIndex: 0,
+    onKeyDown: e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        choose(i);
+      }
+    },
+    "data-sentence": i,
+    "aria-pressed": selected === i,
+    className: 'story-sentence ' + (placements[i] || '') + ' ' + (selected === i ? 'selected' : ''),
+    onClick: () => choose(i)
+  }, /*#__PURE__*/React.createElement("sup", null, i + 1), item.text), ' ')))), /*#__PURE__*/React.createElement("aside", {
+    className: "story-tools"
+  }, /*#__PURE__*/React.createElement("h3", null, "Tentukan jenis kalimat"), /*#__PURE__*/React.createElement("p", null, selected === null ? 'Pilih satu kalimat pada paragraf.' : 'Kalimat ' + (selected + 1) + ' dipilih.'), targets.map(type => /*#__PURE__*/React.createElement("button", {
+    key: type,
+    "data-target": type,
+    disabled: selected === null,
+    className: 'story-classify ' + type,
+    onClick: () => assign(type)
+  }, type === 'fakta' ? '✓' : '✦', " Tandai ", labels[type])), /*#__PURE__*/React.createElement("div", {
+    className: "story-legend"
+  }, "Hijau: fakta \xB7 Jingga: opini"), /*#__PURE__*/React.createElement("ol", null, mission.items.map((item, i) => /*#__PURE__*/React.createElement("li", {
+    key: i
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => choose(i)
+  }, "Kalimat ", i + 1), /*#__PURE__*/React.createElement("b", {
+    className: placements[i] || ''
+  }, placements[i] ? labels[placements[i]] : 'Belum ditandai')))))), feedback && /*#__PURE__*/React.createElement("div", {
+    className: "mission-feedback",
+    role: "alert"
+  }, /*#__PURE__*/React.createElement("strong", null, "Belum tepat. Perbaiki bagian berikut:"), feedback.map(item => /*#__PURE__*/React.createElement("p", {
+    key: item.text
+  }, /*#__PURE__*/React.createElement("b", null, "\u201C", item.text, "\u201D"), /*#__PURE__*/React.createElement("br", null), item.reason))), /*#__PURE__*/React.createElement("footer", {
+    className: "mission-footer"
+  }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("b", null, Object.keys(placements).length, "/", mission.items.length, " kalimat"), " \xB7 Hadiah Rp ", reward.toLocaleString('id-ID'), /*#__PURE__*/React.createElement("small", null, "Hadiah diberikan setelah seluruh jawaban benar.")), /*#__PURE__*/React.createElement("button", {
+    className: "mission-primary",
+    onClick: check
+  }, level === 2 ? 'Periksa Paragraf' : level === 1 ? 'Periksa Pasangan' : 'Periksa Susunan'))))));
+}
+function QuestionPanel({
+  question,
+  selected,
+  onSelect,
+  feedback,
+  onSubmit,
+  onBack,
+  score,
+  attempted
+}) {
+  const multi = question.type === 'multiple';
+  return /*#__PURE__*/React.createElement("section", {
+    className: "exam-panel",
+    "data-question-id": question.id
+  }, /*#__PURE__*/React.createElement("header", {
+    className: "exam-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", null, "LEVEL ", question.level, " \xB7 ", question.difficulty === 'easy' ? 'MUDAH' : question.difficulty === 'medium' ? 'SEDANG' : 'SULIT'), /*#__PURE__*/React.createElement("h2", null, "Soal ", question.id, " \xB7 ", multi ? 'Pilihan Ganda Kompleks' : 'Pilihan Ganda')), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, question.practice ? 'LATIHAN ULANG' : 'PENILAIAN'), /*#__PURE__*/React.createElement("strong", null, score, "/30 benar \xB7 ", attempted, "/30 dijawab"))), /*#__PURE__*/React.createElement("div", {
+    className: "exam-instructions"
+  }, multi ? 'Pilih semua jawaban yang benar. Nilai 1 hanya jika seluruh jawaban benar dipilih tanpa pilihan salah.' : 'Pilih satu jawaban yang paling tepat.', " ", question.practice ? 'Latihan ulang menambah dana, tanpa mengubah nilai.' : 'Jawaban pertama yang diperiksa dicatat sebagai nilai.'), /*#__PURE__*/React.createElement("div", {
+    className: "exam-body"
+  }, /*#__PURE__*/React.createElement("article", {
+    className: "exam-reading"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "exam-number"
+  }, "PERTANYAAN ", String(question.id).padStart(2, '0')), /*#__PURE__*/React.createElement("div", {
+    className: "exam-question"
+  }, question.q), question.table && /*#__PURE__*/React.createElement("table", null, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, question.table.headers.map(h => /*#__PURE__*/React.createElement("th", {
+    key: h
+  }, h)))), /*#__PURE__*/React.createElement("tbody", null, question.table.rows.map(row => /*#__PURE__*/React.createElement("tr", {
+    key: row[0]
+  }, row.map(c => /*#__PURE__*/React.createElement("td", {
+    key: c
+  }, c))))))), /*#__PURE__*/React.createElement("div", {
+    className: "exam-answers"
+  }, /*#__PURE__*/React.createElement("fieldset", {
+    disabled: !!feedback
+  }, /*#__PURE__*/React.createElement("legend", null, multi ? 'Centang semua jawaban yang benar' : 'Pilih jawabanmu'), question.options.map((option, i) => /*#__PURE__*/React.createElement("label", {
+    key: i,
+    className: 'exam-option ' + (selected.includes(i) ? 'selected ' : '') + (feedback && question.answers.includes(i) ? 'answer-correct' : '')
+  }, /*#__PURE__*/React.createElement("input", {
+    type: multi ? 'checkbox' : 'radio',
+    name: 'question-' + question.id,
+    checked: selected.includes(i),
+    onChange: () => onSelect(i)
+  }), /*#__PURE__*/React.createElement("b", null, String.fromCharCode(65 + i)), /*#__PURE__*/React.createElement("span", null, option)))), feedback && /*#__PURE__*/React.createElement("div", {
+    className: 'exam-feedback ' + (feedback.correct ? 'correct' : 'wrong'),
+    role: "status"
+  }, /*#__PURE__*/React.createElement("strong", null, feedback.correct ? 'Jawaban tepat!' : 'Belum tepat.', " ", feedback.practice ? 'Latihan ulang' : `Skor soal: ${feedback.correct ? 1 : 0}/1`), /*#__PURE__*/React.createElement("p", null, "Jawaban benar: ", question.answers.map(i => String.fromCharCode(65 + i)).join(', '), "."), /*#__PURE__*/React.createElement("p", null, hl(question.explanation)), /*#__PURE__*/React.createElement("b", null, "+Rp ", feedback.reward.toLocaleString('id-ID'))))), /*#__PURE__*/React.createElement("footer", {
+    className: "exam-footer"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "prep-secondary",
+    onClick: onBack
+  }, feedback ? 'Kembali ke Kota' : 'Kembali tanpa Menjawab'), /*#__PURE__*/React.createElement("span", null, multi ? `${selected.length} pilihan dipilih` : 'Satu jawaban', " \xB7 Nomor soal mengikuti naskah guru"), !feedback && /*#__PURE__*/React.createElement("button", {
+    className: "prep-primary",
+    disabled: !selected.length,
+    onClick: onSubmit
+  }, "Periksa Jawaban ", /*#__PURE__*/React.createElement(CheckCircle, {
+    size: 19
+  }))));
+}
+function DeveloperProfile() {
+  const dialogRef = useRef(null);
+  const buttonRef = useRef(null);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    ref: buttonRef,
+    type: "button",
+    className: "developer-profile-button",
+    "aria-haspopup": "dialog",
+    onClick: () => dialogRef.current.showModal()
+  }, /*#__PURE__*/React.createElement(User, {
+    size: 20
+  }), /*#__PURE__*/React.createElement("span", null, "Profil Pengembang")), /*#__PURE__*/React.createElement("dialog", {
+    ref: dialogRef,
+    className: "developer-dialog",
+    "aria-labelledby": "developer-title",
+    onClose: () => buttonRef.current?.focus(),
+    onClick: e => {
+      if (e.target !== dialogRef.current) return;
+      const box = dialogRef.current.getBoundingClientRect();
+      if (e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom) dialogRef.current.close();
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "developer-close",
+    "aria-label": "Tutup profil pengembang",
+    autoFocus: true,
+    onClick: () => dialogRef.current.close()
+  }, /*#__PURE__*/React.createElement(X, {
+    size: 25
+  })), /*#__PURE__*/React.createElement("h2", {
+    id: "developer-title"
+  }, "Profil Pengembang"), /*#__PURE__*/React.createElement("div", {
+    className: "developer-content"
+  }, /*#__PURE__*/React.createElement("figure", {
+    className: "developer-photo"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "assets/gambar/profil-pengembang.png",
+    alt: "Foto Abdul Rahmat, S.Pd",
+    width: "1254",
+    height: "1254"
+  }), /*#__PURE__*/React.createElement("figcaption", null, "Abdul Rahmat, S.Pd")), /*#__PURE__*/React.createElement("dl", {
+    className: "developer-details"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("dt", null, "Nama"), /*#__PURE__*/React.createElement("dd", null, "Abdul Rahmat, S.Pd")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("dt", null, "Asal Instansi"), /*#__PURE__*/React.createElement("dd", null, "SD Negeri 011 Balikpapan Tengah")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("dt", null, "Jenis"), /*#__PURE__*/React.createElement("dd", null, "Gim Edukasi"))))));
+}
+function readAudioPreferences() {
+  const defaults = {
+    music: 50,
+    sfx: 60,
+    muted: false
+  };
+  try {
+    const saved = JSON.parse(localStorage.getItem('berdazi-audio') || 'null');
+    if (!saved) return defaults;
+    return {
+      music: Number.isFinite(saved.music) ? Math.max(0, Math.min(100, saved.music)) : 50,
+      sfx: Number.isFinite(saved.sfx) ? Math.max(0, Math.min(100, saved.sfx)) : 60,
+      muted: saved.muted === true
+    };
+  } catch {
+    return defaults;
+  }
+}
+function AudioControls({
+  preferences,
+  onPreferences,
+  isPlaying,
+  onToggleMusic
+}) {
+  const [open, setOpen] = useState(false);
+  const [values, setValues] = useState({
+    ...preferences
+  });
+  const controlRef = useRef(null);
+  useEffect(() => {
+    const dismiss = e => {
+      if (!controlRef.current?.contains(e.target)) setOpen(false);
+    };
+    const escape = e => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('pointerdown', dismiss);
+    document.addEventListener('keydown', escape);
+    return () => {
+      document.removeEventListener('pointerdown', dismiss);
+      document.removeEventListener('keydown', escape);
+    };
+  }, []);
+  const update = (key, value) => {
+    const next = {
+      ...values,
+      [key]: value
+    };
+    setValues(next);
+    onPreferences(next);
+    try {
+      localStorage.setItem('berdazi-audio', JSON.stringify(next));
+    } catch {}
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "audio-controls",
+    ref: controlRef
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "utility-button",
+    title: "Pengaturan volume",
+    "aria-label": "Pengaturan volume",
+    "aria-expanded": open,
+    onClick: () => setOpen(!open)
+  }, values.muted ? /*#__PURE__*/React.createElement(VolumeX, {
+    size: 23
+  }) : /*#__PURE__*/React.createElement(Volume2, {
+    size: 23
+  })), open && /*#__PURE__*/React.createElement("section", {
+    className: "audio-panel",
+    "aria-label": "Pengaturan audio"
+  }, /*#__PURE__*/React.createElement("header", null, /*#__PURE__*/React.createElement("strong", null, "Atur suasana"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    "aria-label": "Tutup pengaturan volume",
+    onClick: () => setOpen(false)
+  }, /*#__PURE__*/React.createElement(X, {
+    size: 18
+  }))), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "music-volume"
+  }, "Musik latar ", /*#__PURE__*/React.createElement("output", null, values.music, "%")), /*#__PURE__*/React.createElement("input", {
+    id: "music-volume",
+    type: "range",
+    min: "0",
+    max: "100",
+    value: values.music,
+    onChange: e => update('music', Number(e.target.value))
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "sfx-volume"
+  }, "Efek suara ", /*#__PURE__*/React.createElement("output", null, values.sfx, "%")), /*#__PURE__*/React.createElement("input", {
+    id: "sfx-volume",
+    type: "range",
+    min: "0",
+    max: "100",
+    value: values.sfx,
+    onChange: e => update('sfx', Number(e.target.value))
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "audio-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: onToggleMusic
+  }, isPlaying ? 'Jeda musik' : 'Putar musik'), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    "aria-pressed": values.muted,
+    onClick: () => update('muted', !values.muted)
+  }, values.muted ? 'Aktifkan suara' : 'Senyapkan semua')), /*#__PURE__*/React.createElement("small", null, "Volume tersimpan di browser ini.")));
+}
+const BackgroundWrapper = ({
+  children,
+  overlayClass = "bg-slate-900/60",
+  showControls = true,
+  gameState,
+  showExitConfirm,
+  renderExitConfirmModal,
+  notification,
+  goHome,
+  isFullscreen,
+  toggleFullscreen,
+  isMusicPlaying,
+  toggleMusic,
+  audioPreferences,
+  applyAudioPreferences
+}) => /*#__PURE__*/React.createElement("div", {
+  className: `min-h-screen latar-kota bg-cover bg-center bg-no-repeat bg-fixed relative font-sans overflow-hidden flex flex-col items-center justify-center`
+}, /*#__PURE__*/React.createElement("div", {
+  className: `absolute inset-0 ${overlayClass} backdrop-blur-[4px]`
+}), showExitConfirm && renderExitConfirmModal(), /*#__PURE__*/React.createElement("div", {
+  className: "absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none"
+}, /*#__PURE__*/React.createElement("div", {
+  className: "absolute top-[-10%] left-[20%] w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] animate-pulse"
+}), /*#__PURE__*/React.createElement("div", {
+  className: "absolute bottom-[-10%] right-[10%] w-96 h-96 bg-blue-500/20 rounded-full blur-[100px] animate-pulse delay-1000"
+})), notification && /*#__PURE__*/React.createElement("div", {
+  className: `fixed top-8 left-1/2 -translate-x-1/2 z-[100] px-6 py-4 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] font-bold text-white flex items-center gap-3 animate-in slide-in-from-top-10 fade-in duration-300 w-max text-lg border border-white/20 backdrop-blur-xl
+              ${notification.type === 'error' ? 'bg-red-500/90' : notification.type === 'warning' ? 'bg-orange-500/90' : 'bg-emerald-500/90'}
+            `
+}, notification.type === 'error' ? /*#__PURE__*/React.createElement(AlertTriangle, {
+  size: 24
+}) : /*#__PURE__*/React.createElement(CheckCircle, {
+  size: 24
+}), notification.msg), showControls && /*#__PURE__*/React.createElement("div", {
+  className: "fixed top-4 right-4 md:top-6 md:right-6 z-[90] flex gap-2"
+}, gameState !== 'intro' && /*#__PURE__*/React.createElement("button", {
+  onClick: goHome,
+  className: "bg-white/10 text-white p-2 md:p-3 rounded-xl hover:bg-red-500/80 transition-all shadow-lg backdrop-blur-md border border-white/10 active:scale-95",
+  title: "Kembali ke Halaman Awal"
+}, /*#__PURE__*/React.createElement(Home, {
+  size: 20,
+  className: "md:w-6 md:h-6"
+})), /*#__PURE__*/React.createElement(AudioControls, {
+  preferences: audioPreferences.current,
+  onPreferences: applyAudioPreferences,
+  isPlaying: isMusicPlaying,
+  onToggleMusic: toggleMusic
+}), /*#__PURE__*/React.createElement("button", {
+  onClick: toggleFullscreen,
+  className: "bg-white/10 text-white p-2 md:p-3 rounded-xl hover:bg-white/20 transition-all shadow-lg backdrop-blur-md border border-white/10 active:scale-95",
+  title: "Mode Fullscreen"
+}, isFullscreen ? /*#__PURE__*/React.createElement(Minimize, {
+  size: 20,
+  className: "md:w-6 md:h-6"
+}) : /*#__PURE__*/React.createElement(Maximize, {
+  size: 20,
+  className: "md:w-6 md:h-6"
+}))), /*#__PURE__*/React.createElement("div", {
+  className: "relative z-10 w-full h-full flex flex-col items-center justify-center"
+}, children));
+const PREPARATION_QUESTIONS = [{
+  title: 'Kenali fakta yang didukung bukti',
+  context: 'Catatan inventaris pos: terdapat 8 lampu dan 2 pintu. Catatan ini adalah bukti dalam cerita latihan.',
+  question: 'Pernyataan mana yang sesuai dengan fakta pada catatan?',
+  options: ['Pos ini adalah tempat paling nyaman.', 'Pos memiliki 8 lampu.', 'Sebaiknya pintu pos dicat hijau.'],
+  answer: 1,
+  explanation: 'Jumlah 8 lampu dapat diperiksa pada catatan. “Paling nyaman” adalah penilaian, sedangkan “sebaiknya” menyatakan saran.'
+}, {
+  title: 'Bedakan penilaian dari kejadian',
+  context: 'Seorang penjaga berkata, “Menurutku, taman kota adalah tempat paling indah.”',
+  question: 'Mengapa pernyataan penjaga termasuk opini?',
+  options: ['Karena kalimat itu menyebut suatu tempat.', 'Karena semua ucapan penjaga adalah opini.', 'Karena “paling indah” merupakan penilaian pribadi.'],
+  answer: 2,
+  explanation: 'Keindahan merupakan penilaian yang dapat berbeda antarorang. Periksa isi pernyataannya, bukan hanya siapa yang berbicara atau kata pembukanya.'
+}, {
+  title: 'Periksa klaim sebelum mempercayainya',
+  context: 'Penghitungan dan catatan gudang menunjukkan 6 kotak obat. Sebuah pesan menyatakan, “Ada 10 kotak obat.”',
+  question: 'Bagaimana sebaiknya kita menilai pesan itu?',
+  options: ['Klaim jumlahnya tidak sesuai bukti dan perlu diperbaiki.', 'Pesan itu otomatis menjadi opini karena salah.', 'Pesan itu pasti fakta yang benar karena menggunakan angka.'],
+  answer: 0,
+  explanation: 'Klaim jumlah dapat diuji. Angka tidak menjamin kebenaran, dan klaim yang salah tidak otomatis menjadi opini. Sesuaikan informasi dengan bukti yang dapat dipercaya.'
+}];
+function PreparationScreen({
+  onComplete
+}) {
+  const [page, setPage] = useState('summary');
+  const [summarySection, setSummarySection] = useState(0);
+  const [current, setCurrent] = useState(0);
+  const [selected, setSelected] = useState({});
+  const [passed, setPassed] = useState({});
+  const [feedback, setFeedback] = useState(null);
+  const titleRef = useRef(null);
+  const q = PREPARATION_QUESTIONS[current];
+  const total = Object.values(passed).filter(Boolean).length;
+  useEffect(() => {
+    titleRef.current?.focus();
+  }, [page, current]);
+  const check = () => {
+    if (selected[current] === undefined || passed[current]) return;
+    const correct = selected[current] === q.answer;
+    setFeedback(correct ? 'correct' : 'wrong');
+    if (correct) setPassed(prev => ({
+      ...prev,
+      [current]: true
+    }));
+  };
+  const advance = () => {
+    if (!passed[current]) return;
+    if (current < PREPARATION_QUESTIONS.length - 1) {
+      setCurrent(current + 1);
+      setFeedback(null);
+    } else if (total === PREPARATION_QUESTIONS.length) onComplete();
+  };
+  return /*#__PURE__*/React.createElement("section", {
+    className: "prep-screen",
+    "aria-label": "Persiapan sebelum bermain"
+  }, /*#__PURE__*/React.createElement("header", {
+    className: "prep-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", {
+    className: "prep-eyebrow"
+  }, "BEKAL KOMANDAN \xB7 SEBELUM MASUK LEVEL"), /*#__PURE__*/React.createElement("h1", {
+    ref: titleRef,
+    tabIndex: -1
+  }, page === 'summary' ? 'Rangkuman: Fakta & Opini' : 'Latihan Pemahaman Singkat')), /*#__PURE__*/React.createElement("div", {
+    className: "prep-steps"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: page === 'summary' ? 'active' : ''
+  }, "01 Rangkuman"), /*#__PURE__*/React.createElement("i", null, "\u2192"), /*#__PURE__*/React.createElement("span", {
+    className: page === 'practice' ? 'active' : ''
+  }, "02 Latihan"), /*#__PURE__*/React.createElement("i", null, "\u2192"), /*#__PURE__*/React.createElement("span", null, "03 Bermain"))), page === 'summary' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "prep-body supplied-summary"
+  }, /*#__PURE__*/React.createElement("nav", {
+    className: "summary-navigation",
+    "aria-label": "Bagian rangkuman"
+  }, ['Kalimat Fakta', 'Kalimat Opini', 'Perbedaan Utama'].map((label, i) => /*#__PURE__*/React.createElement("button", {
+    key: label,
+    type: "button",
+    "aria-pressed": summarySection === i,
+    onClick: () => setSummarySection(i)
+  }, /*#__PURE__*/React.createElement("span", null, i + 1), label))), summarySection === 0 && /*#__PURE__*/React.createElement("section", {
+    className: "summary-section",
+    "aria-labelledby": "fact-summary-title"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "summary-definition"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "summary-badge"
+  }, "01 \xB7 INFORMASI YANG DAPAT DIBUKTIKAN"), /*#__PURE__*/React.createElement("h2", {
+    id: "fact-summary-title"
+  }, "Kalimat Fakta"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Pengertian:"), " Informasi atau keadaan yang benar-benar terjadi dan dapat dibuktikan kebenarannya.")), /*#__PURE__*/React.createElement("div", {
+    className: "summary-columns"
+  }, /*#__PURE__*/React.createElement("article", {
+    className: "summary-characteristics"
+  }, /*#__PURE__*/React.createElement("h3", null, "Ciri-ciri"), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, "Bersifat ", /*#__PURE__*/React.createElement("strong", null, "objektif"), " (apa adanya, tidak memihak)."), /*#__PURE__*/React.createElement("li", null, "Memiliki ", /*#__PURE__*/React.createElement("strong", null, "data yang akurat"), " (seperti waktu, tempat, atau angka yang nyata)."), /*#__PURE__*/React.createElement("li", null, "Bisa dijawab dengan rumus ", /*#__PURE__*/React.createElement("strong", null, "5W + 1H"), " (Apa, Siapa, Di mana, Kapan, Mengapa, Bagaimana)."))), /*#__PURE__*/React.createElement("article", {
+    className: "summary-examples"
+  }, /*#__PURE__*/React.createElement("h3", null, "Contoh"), /*#__PURE__*/React.createElement("ol", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("em", null, "Indonesia merdeka pada tanggal 17 Agustus 1945.")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("em", null, "Kucing memiliki empat kaki.")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("em", null, "Jarak dari rumah ke sekolah adalah 5 km.")))))), summarySection === 1 && /*#__PURE__*/React.createElement("section", {
+    className: "summary-section opinion-summary",
+    "aria-labelledby": "opinion-summary-title"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "summary-definition"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "summary-badge"
+  }, "02 \xB7 PENDAPAT DAN PANDANGAN"), /*#__PURE__*/React.createElement("h2", {
+    id: "opinion-summary-title"
+  }, "Kalimat Opini"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Pengertian:"), " Pendapat, pikiran, atau pendirian seseorang/kelompok terhadap suatu peristiwa.")), /*#__PURE__*/React.createElement("div", {
+    className: "summary-columns"
+  }, /*#__PURE__*/React.createElement("article", {
+    className: "summary-characteristics"
+  }, /*#__PURE__*/React.createElement("h3", null, "Ciri-ciri"), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, "Bersifat ", /*#__PURE__*/React.createElement("strong", null, "subjektif"), " (tiap orang bisa berbeda-beda)."), /*#__PURE__*/React.createElement("li", null, "Belum tentu terbukti benar atau berupa rencana/prediksi di masa depan."), /*#__PURE__*/React.createElement("li", null, "Sering menggunakan kata penanda seperti: ", /*#__PURE__*/React.createElement("em", null, "menurut saya, mungkin, sebaiknya, seharusnya, paling, lebih, sepertinya"), "."))), /*#__PURE__*/React.createElement("article", {
+    className: "summary-examples"
+  }, /*#__PURE__*/React.createElement("h3", null, "Contoh"), /*#__PURE__*/React.createElement("ol", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("em", null, "Bahasa Indonesia adalah pelajaran paling menyenangkan.")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("em", null, "Kue buatan Ibu adalah yang paling enak di dunia.")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("em", null, "Besok mungkin akan terjadi hujan.")))))), summarySection === 2 && /*#__PURE__*/React.createElement("section", {
+    className: "summary-section",
+    "aria-labelledby": "comparison-summary-title"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "summary-definition"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "summary-badge"
+  }, "03 \xB7 BANDINGKAN KEDUANYA"), /*#__PURE__*/React.createElement("h2", {
+    id: "comparison-summary-title"
+  }, "Perbedaan Utama")), /*#__PURE__*/React.createElement("table", {
+    className: "summary-table"
+  }, /*#__PURE__*/React.createElement("caption", {
+    className: "summary-visually-hidden"
+  }, "Perbedaan kalimat fakta dan kalimat opini"), /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", {
+    scope: "col"
+  }, "Pembeda"), /*#__PURE__*/React.createElement("th", {
+    scope: "col"
+  }, "Kalimat Fakta"), /*#__PURE__*/React.createElement("th", {
+    scope: "col"
+  }, "Kalimat Opini"))), /*#__PURE__*/React.createElement("tbody", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", {
+    scope: "row"
+  }, "Kebenaran"), /*#__PURE__*/React.createElement("td", null, "Pasti benar dan bisa dicek"), /*#__PURE__*/React.createElement("td", null, "Belum tentu benar / masih dugaan")), /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", {
+    scope: "row"
+  }, "Sifat"), /*#__PURE__*/React.createElement("td", null, "Objektif (nyata)"), /*#__PURE__*/React.createElement("td", null, "Subjektif (pribadi)")), /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", {
+    scope: "row"
+  }, "Bukti"), /*#__PURE__*/React.createElement("td", null, "Punya data atau bukti konkret"), /*#__PURE__*/React.createElement("td", null, "Berupa perasaan, saran, atau argumen")))))), /*#__PURE__*/React.createElement("footer", {
+    className: "prep-footer"
+  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "Syarat membuka permainan"), /*#__PURE__*/React.createElement("span", null, "Tuntaskan 3 latihan dengan benar. Kamu boleh memperbaiki jawaban.")), /*#__PURE__*/React.createElement("div", {
+    className: "prep-footer-actions"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-sm text-slate-500"
+  }, "Bagian ", summarySection + 1, " / 3"), summarySection > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "prep-secondary",
+    onClick: () => setSummarySection(summarySection - 1)
+  }, /*#__PURE__*/React.createElement(ChevronLeft, {
+    size: 18
+  }), " Sebelumnya"), /*#__PURE__*/React.createElement("button", {
+    className: "prep-primary",
+    onClick: () => {
+      if (summarySection < 2) setSummarySection(summarySection + 1);else {
+        setPage('practice');
+        setFeedback(null);
+      }
+    }
+  }, summarySection < 2 ? 'Materi Berikutnya' : 'Lanjut ke Latihan', " ", /*#__PURE__*/React.createElement(ArrowRight, {
+    size: 20
+  }))))) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "prep-body prep-practice"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prep-progress"
+  }, /*#__PURE__*/React.createElement("span", null, "Latihan ", current + 1, " dari ", PREPARATION_QUESTIONS.length), /*#__PURE__*/React.createElement("strong", null, total, "/3 tuntas"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: total / 3 * 100 + '%'
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "prep-question-layout"
+  }, /*#__PURE__*/React.createElement("article", {
+    className: "prep-context"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "prep-eyebrow"
+  }, "MISI PEMAHAMAN ", String(current + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("h2", null, q.title), /*#__PURE__*/React.createElement("p", null, q.context), /*#__PURE__*/React.createElement("div", {
+    className: "prep-reminder"
+  }, /*#__PURE__*/React.createElement(Shield, {
+    size: 24
+  }), /*#__PURE__*/React.createElement("span", null, "Permainan baru terbuka setelah ketiga latihan tuntas. Latihan ini tidak mengurangi dana atau nyawa."))), /*#__PURE__*/React.createElement("div", {
+    className: "prep-answer"
+  }, /*#__PURE__*/React.createElement("fieldset", null, /*#__PURE__*/React.createElement("legend", null, q.question), q.options.map((option, i) => /*#__PURE__*/React.createElement("label", {
+    key: current + '-' + i,
+    className: 'prep-option ' + (selected[current] === i ? 'selected ' : '') + (passed[current] && selected[current] === i ? 'correct' : '')
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "radio",
+    name: 'preparation-' + current,
+    checked: selected[current] === i,
+    disabled: !!passed[current],
+    onChange: () => {
+      setSelected(prev => ({
+        ...prev,
+        [current]: i
+      }));
+      setFeedback(null);
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "prep-letter"
+  }, String.fromCharCode(65 + i)), /*#__PURE__*/React.createElement("span", null, option)))), (feedback || passed[current]) && /*#__PURE__*/React.createElement("div", {
+    role: "status",
+    className: 'prep-feedback ' + (passed[current] ? 'is-correct' : 'is-wrong')
+  }, /*#__PURE__*/React.createElement("strong", null, passed[current] ? 'Tepat! Pemahaman ini sudah tuntas.' : 'Belum tepat. Coba perbaiki jawabanmu.'), /*#__PURE__*/React.createElement("p", null, hl(q.explanation)))))), /*#__PURE__*/React.createElement("footer", {
+    className: "prep-footer"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "prep-secondary",
+    onClick: () => {
+      setPage('summary');
+      setFeedback(null);
+    }
+  }, /*#__PURE__*/React.createElement(ChevronLeft, {
+    size: 18
+  }), " Baca Rangkuman Lagi"), /*#__PURE__*/React.createElement("div", {
+    className: "prep-footer-actions"
+  }, !passed[current] && /*#__PURE__*/React.createElement("button", {
+    className: "prep-check",
+    disabled: selected[current] === undefined,
+    onClick: check
+  }, "Periksa Jawaban"), /*#__PURE__*/React.createElement("button", {
+    className: "prep-primary",
+    disabled: !passed[current] || current === 2 && total !== 3,
+    onClick: advance
+  }, current < 2 ? 'Latihan Berikutnya' : 'Lanjut ke Pengarahan Misi', /*#__PURE__*/React.createElement(ArrowRight, {
+    size: 20
+  }))))));
+}
+const App = () => {
+  const BG_STYLE = "latar-kota bg-cover bg-center bg-no-repeat bg-fixed";
+  const [gameState, setGameState] = useState('intro');
+  const [preparationPassed, setPreparationPassed] = useState(false);
+  const [activeOverlay, setActiveOverlay] = useState(null);
+  const [completedMissions, setCompletedMissions] = useState([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showLevelUpModal, setShowLevelUpModal] = useState(false);
+  const [showDefense, setShowDefense] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false); // State konfirmasi Home
+
+  const [playerName, setPlayerName] = useState(''); // State for player name
+  const [money, setMoney] = useState(0);
+  const [level, setLevel] = useState(0);
+  const [myChars, setMyChars] = useState([]);
+  const [myEquip, setMyEquip] = useState([]);
+  const [notification, setNotification] = useState(null);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [quizFeedback, setQuizFeedback] = useState(null);
+  const [correctQuestions, setCorrectQuestions] = useState(new Set());
+  const [quizSelections, setQuizSelections] = useState([]);
+  const [quizResults, setQuizResults] = useState({});
+  const quizAnsweredRef = useRef(false);
+
+  // Audio State
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const audioRef = useRef(null);
+  const audioPreferences = useRef(readAudioPreferences());
+  const activeSfx = useRef(new Set());
+  const applyAudioPreferences = next => {
+    audioPreferences.current = next;
+    if (audioRef.current) audioRef.current.volume = next.muted ? 0 : next.music / 100;
+    activeSfx.current.forEach(audio => {
+      audio.volume = next.muted ? 0 : next.sfx / 100;
+    });
+  };
+  const showNotification = (msg, type) => {
+    setNotification({
+      msg,
+      type
+    });
+    setTimeout(() => setNotification(null), 2500);
+  };
+  useEffect(() => {
+    // Initialize Audio
+    audioRef.current = new Audio(BACKSONG_URL);
+    audioRef.current.loop = true;
+    audioRef.current.volume = audioPreferences.current.muted ? 0 : audioPreferences.current.music / 100;
+    audioRef.current.onplay = () => setIsMusicPlaying(true);
+    audioRef.current.onpause = () => setIsMusicPlaying(false);
+
+    // Local click pool: one sound for enabled buttons and native choices.
+    // Capture runs before navigation; keyboard and touch clicks use the same path.
+    const clickPool = Array.from({
+      length: 4
+    }, () => {
+      const audio = new Audio('assets/audio/klik.wav');
+      audio.preload = 'auto';
+      audio.onended = audio.onerror = () => activeSfx.current.delete(audio);
+      return audio;
+    });
+    let nextClick = 0;
+    const handleInterfaceClick = event => {
+      const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+      const control = target?.closest('button, input[type="radio"], input[type="checkbox"], [role="button"]');
+      if (!control || control.matches(':disabled') || control.getAttribute('aria-disabled') === 'true' || control.closest('[inert]')) return;
+      const prefs = audioPreferences.current;
+      if (prefs.muted || prefs.sfx <= 0) return;
+      const audio = clickPool.find(item => item.paused || item.ended) || clickPool[nextClick++ % clickPool.length];
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = prefs.sfx / 100;
+      activeSfx.current.add(audio);
+      audio.play().catch(() => activeSfx.current.delete(audio));
+    };
+    document.addEventListener('click', handleInterfaceClick, true);
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    const handleStageMessage = event => {
+      if (event.source !== window.parent) return;
+      if (event.data?.type === 'berdazi-fullscreen-state') setIsFullscreen(event.data.active);
+      if (event.data?.type === 'berdazi-fullscreen-error') showNotification('Layar penuh tidak tersedia pada browser ini.', 'warning');
+    };
+    window.addEventListener('message', handleStageMessage);
+    return () => {
+      document.removeEventListener('click', handleInterfaceClick, true);
+      clickPool.forEach(audio => audio.pause());
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      window.removeEventListener('message', handleStageMessage);
+      activeSfx.current.forEach(audio => audio.pause());
+      activeSfx.current.clear();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+    if (!audioRef.current.paused) audioRef.current.pause();else audioRef.current.play().catch(() => setIsMusicPlaying(false));
+  };
+
+  // Efek Suara Kuis
+  const playSfx = type => {
+    const audio = new Audio();
+    if (type === 'correct') {
+      audio.src = 'assets/audio/jawaban-benar.mp3';
+    } else if (type === 'wrong') {
+      audio.src = 'assets/audio/jawaban-salah.mp3';
+    }
+    audio.volume = audioPreferences.current.muted ? 0 : audioPreferences.current.sfx / 100;
+    activeSfx.current.add(audio);
+    audio.onended = audio.onerror = () => activeSfx.current.delete(audio);
+    audio.play().catch(e => console.log("SFX play failed:", e));
+  };
+  const toggleFullscreen = async () => {
+    if (window.parent !== window) {
+      window.parent.postMessage({
+        type: 'berdazi-fullscreen-request'
+      }, '*');
+      return;
+    }
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.warn("Fullscreen permission denied or not supported:", err);
+      showNotification("Mode Fullscreen diblokir oleh browser ini", "warning");
+    }
+  };
+
+  // Handle kembali ke halaman utama
+  const goHome = () => {
+    if (gameState === 'intro') return;
+    // Munculkan peringatan hanya jika sedang progres main
+    if (gameState === 'game' || gameState === 'quiz' || gameState === 'tutorial' || gameState === 'preparation') {
+      setShowExitConfirm(true);
+    } else {
+      // Kondisi lain (menu, victory) bisa langsung kembali
+      setGameState('intro');
+      setPreparationPassed(false);
+      setMoney(0);
+      setMyChars([]);
+      setMyEquip([]);
+      setLevel(0);
+      setCorrectQuestions(new Set());
+      setQuizResults({});
+      setQuizSelections([]);
+      quizAnsweredRef.current = false;
+      setCompletedMissions([]);
+      setActiveOverlay(null);
+      setShowLevelUpModal(false);
+    }
+  };
+  const calculateTotalEnergy = () => {
+    let baseEnergy = 0;
+    myChars.forEach(c => baseEnergy += c.energy);
+    myEquip.forEach(e => baseEnergy += e.energy);
+    const hasArya = myChars.find(c => c.id === 'arya');
+    if (hasArya) baseEnergy += 30 * myChars.length;
+    const hasSuri = myChars.find(c => c.id === 'suri');
+    if (hasSuri) baseEnergy += 10 * myEquip.length;
+    return baseEnergy;
+  };
+  const currentWave = ZOMBIE_WAVES[level];
+  const waveTotalEnergy = currentWave.reduce((sum, z) => sum + z.energy, 0);
+  const totalEnergy = calculateTotalEnergy();
+  const missionReady = level >= 3 || completedMissions.includes(level);
+  const stageQuestions = ALL_QUESTIONS.filter(q => q.level === level + 1);
+  const levelQuestionCount = stageQuestions.filter(q => Object.prototype.hasOwnProperty.call(quizResults, q.id)).length;
+  const quizReady = level < 3 || levelQuestionCount === 15;
+  const quizScore = Object.values(quizResults).filter(r => r.correct).length;
+  const canAttack = totalEnergy >= waveTotalEnergy && missionReady && quizReady;
+  const completeMission = reward => {
+    setMoney(prev => prev + reward);
+    setCompletedMissions(prev => prev.includes(level) ? prev : [...prev, level]);
+    playSfx("correct");
+  };
+
+  // --- ACTIONS ---
+
+  const handleIntroSubmit = e => {
+    e.preventDefault();
+    if (playerName.trim()) {
+      setPreparationPassed(false);
+      setGameState('preparation');
+      // Try to play music on user interaction
+      if (audioRef.current && !isMusicPlaying) {
+        audioRef.current.play().then(() => {
+          setIsMusicPlaying(true);
+        }).catch(err => {
+          console.log("Auto-play prevented by browser policy", err);
+        });
+      }
+    }
+  };
+  const finishTutorial = () => {
+    if (!preparationPassed) {
+      setGameState('preparation');
+      return;
+    }
+    setGameState('menu');
+  };
+  const startGame = () => {
+    if (!preparationPassed) {
+      setGameState('preparation');
+      return;
+    }
+    setMoney(0);
+    setMyChars([]);
+    setMyEquip([]);
+    setLevel(0);
+    setCorrectQuestions(new Set());
+    setQuizResults({});
+    setQuizSelections([]);
+    quizAnsweredRef.current = false;
+    setCompletedMissions([]);
+    setGameState('game');
+    setActiveOverlay(null);
+    setShowLevelUpModal(false);
+  };
+  const generateQuestion = diff => {
+    const questions = QUESTION_BANK[diff].filter(q => q.level === level + 1);
+    const remaining = questions.filter(q => !Object.prototype.hasOwnProperty.call(quizResults, q.id));
+    const chosen = remaining[0] || questions[Math.floor(Math.random() * questions.length)];
+    setCurrentQuestion({
+      ...chosen,
+      practice: remaining.length === 0
+    });
+    setQuizSelections([]);
+    quizAnsweredRef.current = false;
+    setQuizFeedback(null);
+    setGameState('quiz');
+    setActiveOverlay(null);
+  };
+  const selectQuizAnswer = i => {
+    if (quizAnsweredRef.current) return;
+    setQuizSelections(prev => currentQuestion.type === 'multiple' ? prev.includes(i) ? prev.filter(v => v !== i) : [...prev, i] : [i]);
+  };
+  const handleQuizAnswer = () => {
+    if (quizAnsweredRef.current || !quizSelections.length) return;
+    quizAnsweredRef.current = true;
+    const correct = quizSelections.length === currentQuestion.answers.length && quizSelections.every(i => currentQuestion.answers.includes(i));
+    const reward = correct ? QUIZ_REWARDS[currentQuestion.difficulty] : 0;
+    const practice = Object.prototype.hasOwnProperty.call(quizResults, currentQuestion.id);
+    if (!practice) setQuizResults(prev => ({
+      ...prev,
+      [currentQuestion.id]: {
+        correct,
+        selected: [...quizSelections]
+      }
+    }));
+    if (reward) setMoney(prev => prev + reward);
+    setQuizFeedback({
+      correct,
+      reward,
+      practice
+    });
+    playSfx(correct ? 'correct' : 'wrong');
+  };
+  const buyItem = (item, type) => {
+    if (money < item.cost) {
+      showNotification("Uang tidak cukup!", "error");
+      return;
+    }
+    if (type === 'character') {
+      if (myChars.some(c => c.id === item.id)) {
+        showNotification("Karakter sudah dimiliki!", "error");
+        return;
+      }
+      setMyChars([...myChars, item]);
+    } else {
+      if (myEquip.length >= 3) {
+        showNotification("Maksimal 3 perlengkapan!", "error");
+        return;
+      }
+      setMyEquip([...myEquip, {
+        ...item,
+        uniqueId: Date.now()
+      }]);
+    }
+    setMoney(prev => prev - item.cost);
+    showNotification(`Dibeli: ${item.name}`, "success");
+  };
+  const attackWave = () => {
+    if (!canAttack) return;
+    setShowDefense(true);
+  };
+  const defenseWin = () => {
+    setShowDefense(false);
+    if (level < 4) setShowLevelUpModal(true); else setGameState('victory');
+  };
+  const nextLevel = () => {
+    setLevel(prev => prev + 1);
+    setShowLevelUpModal(false);
+  };
+
+  // --- RENDERERS ---
+
+  const renderExitConfirmModal = () => /*#__PURE__*/React.createElement("div", {
+    className: "fixed inset-0 bg-black/80 z-[110] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-slate-800 border border-slate-600 p-6 md:p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl animate-in zoom-in-95 duration-200"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/30"
+  }, /*#__PURE__*/React.createElement(AlertTriangle, {
+    size: 32,
+    className: "text-red-500"
+  })), /*#__PURE__*/React.createElement("h3", {
+    className: "text-2xl font-black text-white mb-2"
+  }, "Kembali ke Awal?"), /*#__PURE__*/React.createElement("p", {
+    className: "text-slate-300 mb-8 text-sm md:text-base"
+  }, "Progres permainan kamu saat ini akan diulang dari nol."), /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-3 justify-center"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowExitConfirm(false),
+    className: "flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition-colors"
+  }, "Batal"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      setShowExitConfirm(false);
+      setGameState('intro');
+      setPreparationPassed(false);
+      setMoney(0);
+      setMyChars([]);
+      setMyEquip([]);
+      setLevel(0);
+      setCorrectQuestions(new Set());
+      setQuizResults({});
+      setQuizSelections([]);
+      quizAnsweredRef.current = false;
+      setCompletedMissions([]);
+      setActiveOverlay(null);
+      setShowLevelUpModal(false);
+    },
+    className: "flex-1 py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold transition-colors shadow-lg shadow-red-500/30"
+  }, "Ya, Keluar"))));
+  const renderLevelUpModal = () => /*#__PURE__*/React.createElement("div", {
+    className: "fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-8 animate-in fade-in duration-300 backdrop-blur-sm"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-gradient-to-br from-indigo-900 to-purple-900 w-full max-w-lg rounded-[2rem] p-8 md:p-12 text-center relative border-4 border-yellow-400/50 shadow-[0_0_50px_rgba(168,85,247,0.5)] flex flex-col items-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "absolute -top-12 bg-yellow-400 rounded-full p-4 border-4 border-indigo-900 shadow-xl"
+  }, /*#__PURE__*/React.createElement(Star, {
+    size: 48,
+    className: "text-indigo-900 fill-indigo-900 animate-spin-slow"
+  })), /*#__PURE__*/React.createElement("h2", {
+    className: "text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-yellow-500 mb-4 mt-6"
+  }, "HEBAT!"), /*#__PURE__*/React.createElement("p", {
+    className: "text-indigo-100 text-xl mb-8"
+  }, "Komandan ", playerName, ", kamu berhasil mengamankan kota dari serangan gelombang ", level + 1, "."), /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-4"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: nextLevel,
+    className: "px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white rounded-2xl font-black text-xl shadow-lg transform transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+  }, "Lanjut Level ", level + 2, " ", /*#__PURE__*/React.createElement(ArrowRight, null)))));
+  const renderFundSelection = () => /*#__PURE__*/React.createElement("div", {
+    className: "mission-overlay",
+    role: "dialog",
+    "aria-modal": "true",
+    "aria-labelledby": "fund-title"
+  }, /*#__PURE__*/React.createElement("section", {
+    className: "fund-panel"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "mission-close",
+    onClick: () => setActiveOverlay(null),
+    "aria-label": "Kembali ke kota"
+  }, "\u2715"), /*#__PURE__*/React.createElement("p", {
+    className: "mission-eyebrow"
+  }, "LEVEL ", level + 1, " \xB7 BANK SOAL"), /*#__PURE__*/React.createElement("h2", {
+    id: "fund-title"
+  }, level === 3 ? 'Akademi Fakta' : 'Ujian Komandan'), /*#__PURE__*/React.createElement("p", null, level === 3 ? '15 soal pilihan ganda. Pilih satu jawaban setiap soal.' : '15 soal pilihan ganda kompleks. Pilih semua jawaban yang benar.'), /*#__PURE__*/React.createElement("div", {
+    className: "fund-progress"
+  }, /*#__PURE__*/React.createElement("strong", null, levelQuestionCount, "/15 soal dijawab"), /*#__PURE__*/React.createElement("span", null, "Skor gabungan: ", quizScore, "/30")), /*#__PURE__*/React.createElement("div", {
+    className: "fund-options"
+  }, [['easy', 'Mudah'], ['medium', 'Sedang'], ['hard', 'Sulit']].map(([diff, label]) => {
+    const answered = stageQuestions.filter(q => q.difficulty === diff && Object.prototype.hasOwnProperty.call(quizResults, q.id)).length;
+    return /*#__PURE__*/React.createElement("button", {
+      key: diff,
+      onClick: () => generateQuestion(diff)
+    }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, label), /*#__PURE__*/React.createElement("small", null, answered, "/5 soal dijawab \xB7 ", answered === 5 ? 'Latihan ulang tersedia' : `${5 - answered} soal tersisa`)), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("b", null, "+Rp ", QUIZ_REWARDS[diff].toLocaleString('id-ID')), /*#__PURE__*/React.createElement("em", null, "untuk jawaban tepat")));
+  })), /*#__PURE__*/React.createElement("p", {
+    className: "fund-note"
+  }, "Jawab seluruh 15 soal untuk membuka serangan. Jawaban pertama yang diperiksa menjadi nilai. Setelah satu tingkat selesai, latihan ulang dapat menambah dana tanpa mengubah nilai.")));
+  const renderShop = () => /*#__PURE__*/React.createElement("div", {
+    className: "city-shop fixed inset-0 bg-slate-900/90 z-[60] flex flex-col animate-in slide-in-from-bottom duration-300 backdrop-blur-xl"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-white/5 p-6 md:p-8 flex items-center justify-between shadow-2xl z-10 border-b border-white/10"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setActiveOverlay(null),
+    className: "px-6 py-3 bg-white/10 text-white hover:bg-white/20 rounded-2xl flex gap-3 items-center text-lg font-bold transition-all backdrop-blur-md"
+  }, /*#__PURE__*/React.createElement(ChevronLeft, {
+    size: 24
+  }), " Kembali"), /*#__PURE__*/React.createElement("div", {
+    className: "font-bold text-white flex gap-4 items-center bg-black/40 px-8 py-4 rounded-2xl border border-white/10 backdrop-blur-md"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.5)] text-2xl text-black font-bold"
+  }, "Rp"), /*#__PURE__*/React.createElement("span", {
+    className: "text-3xl font-mono tracking-tight"
+  }, money.toLocaleString()))), /*#__PURE__*/React.createElement("div", {
+    className: "shop-content flex-1 overflow-y-auto"
+  }, [{
+    title: 'Karakter Dasar',
+    color: 'text-emerald-400',
+    border: 'border-emerald-500',
+    items: CHARACTERS.green,
+    type: 'character'
+  }, {
+    title: 'Karakter Ahli',
+    color: 'text-rose-400',
+    border: 'border-rose-500',
+    items: CHARACTERS.red,
+    type: 'character'
+  }, {
+    title: 'Karakter Legenda',
+    color: 'text-amber-400',
+    border: 'border-amber-500',
+    items: CHARACTERS.yellow,
+    type: 'character'
+  }, {
+    title: 'Perlengkapan Kota',
+    color: 'text-blue-400',
+    border: 'border-blue-500',
+    items: EQUIPMENTS,
+    type: 'equipment'
+  }].map((section, idx) => /*#__PURE__*/React.createElement("section", {
+    className: "shop-section",
+    key: idx
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: `text-xl font-black uppercase mb-6 px-4 tracking-widest border-l-4 pl-4 ${section.color} ${section.border}`
+  }, section.title), /*#__PURE__*/React.createElement("div", {
+    className: "shop-grid"
+  }, section.items.map(item => /*#__PURE__*/React.createElement(Card, {
+    key: item.id,
+    item: item,
+    owned: section.type === 'character' ? myChars.some(c => c.id === item.id) : false,
+    disabled: section.type === 'equipment' ? myEquip.length >= 3 : false,
+    onClick: () => buyItem(item, section.type)
+  })))))));
+
+  // --- HALAMAN AWAL DIOPTIMALKAN ---
+  if (gameState === 'intro') {
+    return /*#__PURE__*/React.createElement("main", {
+      className: "cover-screen"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "cover-scenery",
+      "aria-hidden": "true"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "cover-grid",
+      "aria-hidden": "true"
+    }), hE('div', {className: 'cover-strip', 'aria-hidden': 'true'}, ['aldi','arya','suri'].map((n, i) => hE('img', {key: n, src: 'assets/gambar/pose-' + n + '.png', className: 'cs-h', alt: '', style: {animationDelay: (-i * .35) + 's'}})), hE('i', {className: 'cs-boom'}), ['tersesat','pemalu','zirah','raja'].map((n, i) => hE('img', {key: n, src: 'assets/gambar/pose-' + n + '.png', className: 'cs-z' + (n === 'raja' ? ' cs-boss' : ''), alt: '', style: {animationDelay: (-i * .3 - .5) + 's'}}))), /*#__PURE__*/React.createElement("header", {
+      className: "cover-nav"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "cover-brand"
+    }, /*#__PURE__*/React.createElement(Shield, {
+      size: 22
+    }), " BERDAZI ", /*#__PURE__*/React.createElement("i", null), " GIM EDUKASI"), /*#__PURE__*/React.createElement("div", {
+      className: "cover-tools"
+    }, /*#__PURE__*/React.createElement(DeveloperProfile, null), /*#__PURE__*/React.createElement(AudioControls, {
+      preferences: audioPreferences.current,
+      onPreferences: applyAudioPreferences,
+      isPlaying: isMusicPlaying,
+      onToggleMusic: toggleMusic
+    }), /*#__PURE__*/React.createElement("button", {
+      className: "utility-button",
+      "aria-label": "Layar penuh",
+      title: "Layar penuh",
+      onClick: toggleFullscreen
+    }, /*#__PURE__*/React.createElement(Maximize, {
+      size: 23
+    })))), /*#__PURE__*/React.createElement("div", {
+      className: "cover-main"
+    }, /*#__PURE__*/React.createElement("section", {
+      className: "cover-story"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "cover-logo"
+    }, /*#__PURE__*/React.createElement("img", {
+      src: "assets/gambar/logo-berdazi.png",
+      alt: "BERDAZI \u2014 Bertahan dari Zombie"
+    })), /*#__PURE__*/React.createElement("p", {
+      className: "cover-kicker"
+    }, "BERDAZI: BERTAHAN DARI ZOMBIE"), /*#__PURE__*/React.createElement("h1", null, hE('span', {className: 'hf'}, 'Fakta'), ' dan ', hE('span', {className: 'ho'}, 'Opini'), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", null, "Taklukkan zombie.")), /*#__PURE__*/React.createElement("p", {
+      className: "cover-description"
+    }, "Jadilah komandan yang cermat. Bedakan fakta dan opini, kumpulkan dana, lalu bangun pertahanan kotamu."), /*#__PURE__*/React.createElement("div", {
+      className: "cover-tags"
+    }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(CheckCircle, {
+      size: 18
+    }), " 3 misi interaktif"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Shield, {
+      size: 18
+    }), " 5 gelombang"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Zap, {
+      size: 18
+    }), " Bisa offline"))), /*#__PURE__*/React.createElement("section", {
+      className: "cover-start"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "cover-start-top"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "cover-step"
+    }, "01 / SIAPKAN MISIMU"), /*#__PURE__*/React.createElement("span", {
+      className: "cover-status"
+    }, /*#__PURE__*/React.createElement("i", null), " KOTA MEMBUTUHKANMU")), /*#__PURE__*/React.createElement("h2", null, "Siap, Komandan?"), /*#__PURE__*/React.createElement("p", null, "Tulis namamu, pelajari rangkuman, lalu tuntaskan 3 latihan sebelum bermain."), /*#__PURE__*/React.createElement("form", {
+      onSubmit: handleIntroSubmit
+    }, /*#__PURE__*/React.createElement("label", {
+      htmlFor: "commander-name"
+    }, "NAMA KOMANDAN"), /*#__PURE__*/React.createElement("div", {
+      className: "cover-name"
+    }, /*#__PURE__*/React.createElement(User, {
+      size: 24
+    }), /*#__PURE__*/React.createElement("input", {
+      id: "commander-name",
+      placeholder: "Masukkan namamu",
+      value: playerName,
+      onChange: e => setPlayerName(e.target.value),
+      maxLength: 30,
+      required: true,
+      autoComplete: "off"
+    })), /*#__PURE__*/React.createElement("button", {
+      type: "submit",
+      className: "cover-play",
+      disabled: !playerName.trim()
+    }, /*#__PURE__*/React.createElement(Play, {
+      size: 24,
+      fill: "currentColor"
+    }), " MULAI PETUALANGAN ", /*#__PURE__*/React.createElement(ArrowRight, {
+      size: 24
+    }))), /*#__PURE__*/React.createElement("div", {
+      className: "cover-mission-list"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, "01"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "Pilah informasi"), /*#__PURE__*/React.createElement("small", null, "Pisahkan fakta dari opini."))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, "02"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "Jodohkan kalimat"), /*#__PURE__*/React.createElement("small", null, "Pasangkan kalimat dengan Fakta/Opini."))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, "03"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "Detektif cerita"), /*#__PURE__*/React.createElement("small", null, "Tandai fakta dan opini dalam paragraf.")))), /*#__PURE__*/React.createElement("div", {
+      className: "cover-recruits"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "cover-recruit-cards"
+    }, /*#__PURE__*/React.createElement("img", {
+      src: "assets/gambar/aldi.png",
+      alt: "Kartu karakter Aldi"
+    }), /*#__PURE__*/React.createElement("img", {
+      src: "assets/gambar/arya.png",
+      alt: "Kartu karakter Arya"
+    }), /*#__PURE__*/React.createElement("img", {
+      src: "assets/gambar/suri.png",
+      alt: "Kartu karakter Suri"
+    })), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, "Pasukan siap direkrut."), /*#__PURE__*/React.createElement("span", null, "Strategimu menentukan nasib kota."))))), /*#__PURE__*/React.createElement("footer", {
+      className: "cover-footer"
+    }, /*#__PURE__*/React.createElement("span", null, "BAHASA INDONESIA ", /*#__PURE__*/React.createElement("i", null), " FAKTA & OPINI")));
+  }
+  if (gameState === 'preparation') {
+    return /*#__PURE__*/React.createElement(BackgroundWrapper, {
+      gameState: gameState,
+      showExitConfirm: showExitConfirm,
+      renderExitConfirmModal: renderExitConfirmModal,
+      notification: notification,
+      goHome: goHome,
+      isFullscreen: isFullscreen,
+      toggleFullscreen: toggleFullscreen,
+      isMusicPlaying: isMusicPlaying,
+      toggleMusic: toggleMusic,
+      audioPreferences: audioPreferences,
+      applyAudioPreferences: applyAudioPreferences,
+      overlayClass: "bg-slate-900/60"
+    }, /*#__PURE__*/React.createElement(PreparationScreen, {
+      onComplete: () => {
+        setPreparationPassed(true);
+        setGameState('tutorial');
+      }
+    }));
+  }
+  if (gameState === 'tutorial') {
+    return /*#__PURE__*/React.createElement(BackgroundWrapper, {
+      gameState: gameState,
+      showExitConfirm: showExitConfirm,
+      renderExitConfirmModal: renderExitConfirmModal,
+      notification: notification,
+      goHome: goHome,
+      isFullscreen: isFullscreen,
+      toggleFullscreen: toggleFullscreen,
+      isMusicPlaying: isMusicPlaying,
+      toggleMusic: toggleMusic,
+      audioPreferences: audioPreferences,
+      applyAudioPreferences: applyAudioPreferences,
+      overlayClass: "bg-slate-900/60"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "w-full max-w-3xl px-6 animate-in fade-in zoom-in duration-700"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "bg-white/10 backdrop-blur-xl rounded-[3rem] p-8 md:p-12 border-2 border-white/20 shadow-2xl text-center"
+    }, /*#__PURE__*/React.createElement("h2", {
+      className: "text-3xl md:text-4xl font-black text-white mb-8 leading-tight uppercase tracking-wider"
+    }, "FAKTA DAN OPINI"), /*#__PURE__*/React.createElement("div", {
+      className: "grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-left"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "bg-black/20 p-6 rounded-2xl border border-white/10 hover:bg-black/30 transition-colors"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "bg-purple-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-purple-400"
+    }, /*#__PURE__*/React.createElement(Brain, {
+      size: 28
+    })), /*#__PURE__*/React.createElement("h3", {
+      className: "font-bold text-white text-lg mb-2"
+    }, "1. Cari Dana"), /*#__PURE__*/React.createElement("p", {
+      className: "text-slate-300 text-sm"
+    }, "Level 1\u20133: pilah kartu, jodohkan kalimat, dan klasifikasikan paragraf cerita. Tuntaskan misi untuk mendapatkan dana.")), /*#__PURE__*/React.createElement("div", {
+      className: "bg-black/20 p-6 rounded-2xl border border-white/10 hover:bg-black/30 transition-colors"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "bg-emerald-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-emerald-400"
+    }, /*#__PURE__*/React.createElement(ShoppingBag, {
+      size: 28
+    })), /*#__PURE__*/React.createElement("h3", {
+      className: "font-bold text-white text-lg mb-2"
+    }, "2. Bangun Kota"), /*#__PURE__*/React.createElement("p", {
+      className: "text-slate-300 text-sm"
+    }, "Gunakan uang untuk merekrut pasukan dan membeli perlengkapan pertahanan.")), /*#__PURE__*/React.createElement("div", {
+      className: "bg-black/20 p-6 rounded-2xl border border-white/10 hover:bg-black/30 transition-colors"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "bg-red-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-red-400"
+    }, /*#__PURE__*/React.createElement(Skull, {
+      size: 28
+    })), /*#__PURE__*/React.createElement("h3", {
+      className: "font-bold text-white text-lg mb-2"
+    }, "3. Bertahan"), /*#__PURE__*/React.createElement("p", {
+      className: "text-slate-300 text-sm"
+    }, "Tuntaskan misi wajib level 1\u20133 dan siapkan energi tim. Level 4\u20135: jawab 30 soal fakta dan opini untuk membuka serangan dan memperoleh nilai akhir."))), /*#__PURE__*/React.createElement("button", {
+      onClick: finishTutorial,
+      className: "w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-black text-xl py-5 rounded-2xl shadow-lg transform transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3"
+    }, "SIAP LAKSANAKAN! ", /*#__PURE__*/React.createElement(Play, {
+      fill: "currentColor"
+    })))));
+  }
+  if (gameState === 'menu') {
+    return /*#__PURE__*/React.createElement(BackgroundWrapper, {
+      gameState: gameState,
+      showExitConfirm: showExitConfirm,
+      renderExitConfirmModal: renderExitConfirmModal,
+      notification: notification,
+      goHome: goHome,
+      isFullscreen: isFullscreen,
+      toggleFullscreen: toggleFullscreen,
+      isMusicPlaying: isMusicPlaying,
+      toggleMusic: toggleMusic,
+      audioPreferences: audioPreferences,
+      applyAudioPreferences: applyAudioPreferences,
+      overlayClass: "bg-slate-900/40"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-center max-w-7xl w-full animate-in zoom-in duration-700 px-4 flex flex-col items-center"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mb-8 relative flex justify-center"
+    }, /*#__PURE__*/React.createElement("img", {
+      src: "assets/gambar/logo-berdazi.png",
+      alt: "BERDAZI Logo",
+      className: "w-[80%] max-w-[400px] md:max-w-[500px] drop-shadow-2xl relative z-10 animate-float"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "absolute inset-0 bg-emerald-500/20 blur-[60px] rounded-full z-0"
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "text-2xl md:text-4xl font-bold text-emerald-100 mb-16 tracking-wide uppercase bg-black/20 px-8 py-2 rounded-full border border-white/10 backdrop-blur-sm shadow-xl mt-4"
+    }, "Halo, Komandan ", playerName, "!"), /*#__PURE__*/React.createElement("button", {
+      onClick: startGame,
+      className: "group relative w-full max-w-2xl py-6 md:py-8 bg-gradient-to-r from-emerald-500 to-green-600 rounded-[2.5rem] font-black text-3xl md:text-4xl text-white shadow-[0_0_50px_rgba(16,185,129,0.4)] hover:shadow-[0_0_80px_rgba(16,185,129,0.6)] active:scale-95 transition-all flex items-center justify-center gap-6 overflow-hidden"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "relative z-10 flex items-center gap-4"
+    }, "MASUK KE KOTA ", /*#__PURE__*/React.createElement(ArrowRight, {
+      size: 40,
+      className: "group-hover:translate-x-2 transition-transform"
+    })))));
+  }
+  if (gameState === 'victory') {
+    return /*#__PURE__*/React.createElement(BackgroundWrapper, {
+      gameState: gameState,
+      showExitConfirm: showExitConfirm,
+      renderExitConfirmModal: renderExitConfirmModal,
+      notification: notification,
+      goHome: goHome,
+      isFullscreen: isFullscreen,
+      toggleFullscreen: toggleFullscreen,
+      isMusicPlaying: isMusicPlaying,
+      toggleMusic: toggleMusic,
+      audioPreferences: audioPreferences,
+      applyAudioPreferences: applyAudioPreferences,
+      overlayClass: "bg-emerald-900/80"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "victory-screen text-center text-white px-4 animate-in fade-in duration-1000"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mb-8 relative inline-block"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "absolute inset-0 bg-yellow-500/30 blur-[50px] animate-pulse"
+    }), /*#__PURE__*/React.createElement("h1", {
+      className: "text-6xl md:text-8xl font-black mb-6 drop-shadow-2xl text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-yellow-500 relative z-10"
+    }, "KOTA SELAMAT!")), /*#__PURE__*/React.createElement("p", {
+      className: "text-xl md:text-3xl opacity-90 mb-12 max-w-3xl mx-auto font-medium text-emerald-100"
+    }, "Strategi brilian, Komandan ", playerName, "! Warga kota kini aman berkat pertahananmu."), /*#__PURE__*/React.createElement("div", {
+      className: "final-assessment"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, quizScore, "/30"), /*#__PURE__*/React.createElement("small", null, "SKOR PEMAHAMAN")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, (quizScore / 30 * 100).toFixed(1).replace('.', ',')), /*#__PURE__*/React.createElement("small", null, "NILAI AKHIR")), /*#__PURE__*/React.createElement("span", null, Object.keys(quizResults).length, "/30 soal telah dijawab", /*#__PURE__*/React.createElement("small", null, "Nilai = (skor \xF7 30) \xD7 100"))), /*#__PURE__*/React.createElement("div", {
+      className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl mx-auto mb-16"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "bg-black/40 p-8 rounded-[2rem] border border-white/10 backdrop-blur-lg flex flex-col items-center"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-sm uppercase tracking-widest text-emerald-400 mb-2 font-bold"
+    }, "Sisa Uang"), /*#__PURE__*/React.createElement("div", {
+      className: "text-4xl md:text-5xl font-mono font-bold text-white"
+    }, "Rp ", money.toLocaleString())), /*#__PURE__*/React.createElement("div", {
+      className: "bg-black/40 p-8 rounded-[2rem] border border-white/10 backdrop-blur-lg flex flex-col items-center"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-sm uppercase tracking-widest text-blue-400 mb-2 font-bold"
+    }, "Pasukan"), /*#__PURE__*/React.createElement("div", {
+      className: "text-4xl md:text-5xl font-mono font-bold text-white"
+    }, myChars.length, " Unit")), /*#__PURE__*/React.createElement("div", {
+      className: "bg-black/40 p-8 rounded-[2rem] border border-white/10 backdrop-blur-lg flex flex-col items-center md:col-span-2 lg:col-span-1"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-sm uppercase tracking-widest text-yellow-400 mb-2 font-bold"
+    }, "Misi Wajib Tuntas"), /*#__PURE__*/React.createElement("div", {
+      className: "text-4xl md:text-5xl font-mono font-bold text-white flex items-center gap-2"
+    }, completedMissions.length, "/3 ", /*#__PURE__*/React.createElement(Award, {
+      size: 40,
+      className: "text-yellow-400"
+    })))), hE(Rapor, {results: quizResults, name: playerName}), /*#__PURE__*/React.createElement("button", {
+      onClick: () => setGameState('menu'),
+      className: "bg-white text-emerald-900 px-16 py-6 rounded-full font-black text-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:scale-105 transition-transform hover:bg-emerald-50"
+    }, "Main Lagi")));
+  }
+  if (gameState === 'quiz') {
+    return /*#__PURE__*/React.createElement(BackgroundWrapper, {
+      gameState: gameState,
+      showExitConfirm: showExitConfirm,
+      renderExitConfirmModal: renderExitConfirmModal,
+      notification: notification,
+      goHome: goHome,
+      isFullscreen: isFullscreen,
+      toggleFullscreen: toggleFullscreen,
+      isMusicPlaying: isMusicPlaying,
+      toggleMusic: toggleMusic,
+      audioPreferences: audioPreferences,
+      applyAudioPreferences: applyAudioPreferences,
+      overlayClass: "bg-slate-900/80"
+    }, /*#__PURE__*/React.createElement(QuestionPanel, {
+      question: currentQuestion,
+      selected: quizSelections,
+      onSelect: selectQuizAnswer,
+      feedback: quizFeedback,
+      onSubmit: handleQuizAnswer,
+      onBack: () => setGameState('game'),
+      score: quizScore,
+      attempted: Object.keys(quizResults).length
+    }));
+  }
+  return /*#__PURE__*/React.createElement("main", {
+    className: "battle-dashboard"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "battle-scenery",
+    "aria-hidden": "true"
+  }), showExitConfirm && renderExitConfirmModal(), showDefense && hE(DefensePhase, {wave: currentWave, chars: myChars, onWin: defenseWin, onLose: () => { setShowDefense(false); showNotification('Benteng retak! Pelajari lagi lalu serang kembali.', 'error'); }}), showLevelUpModal && renderLevelUpModal(), notification && /*#__PURE__*/React.createElement("div", {
+    className: 'battle-notification ' + notification.type,
+    role: "status"
+  }, notification.msg), activeOverlay === 'fund_selection' && (level < 3 ? /*#__PURE__*/React.createElement(MissionPanel, {
+    key: level,
+    level: level,
+    completed: completedMissions.includes(level),
+    onReward: completeMission,
+    onClose: () => setActiveOverlay(null)
+  }) : renderFundSelection()), activeOverlay === 'shop' && renderShop(), /*#__PURE__*/React.createElement("header", {
+    className: "battle-top"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "battle-wordmark"
+  }, /*#__PURE__*/React.createElement(Shield, {
+    size: 30
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, "BERDAZI"), /*#__PURE__*/React.createElement("span", null, "Komandan ", playerName))), /*#__PURE__*/React.createElement("div", {
+    className: "battle-wallet"
+  }, /*#__PURE__*/React.createElement("span", null, "DANA KOTA"), /*#__PURE__*/React.createElement("strong", null, "Rp ", money.toLocaleString('id-ID'))), /*#__PURE__*/React.createElement("div", {
+    className: "battle-controls"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "utility-button",
+    title: "Kembali ke Awal",
+    "aria-label": "Kembali ke Awal",
+    onClick: goHome
+  }, /*#__PURE__*/React.createElement(Home, {
+    size: 22
+  })), /*#__PURE__*/React.createElement(AudioControls, {
+    preferences: audioPreferences.current,
+    onPreferences: applyAudioPreferences,
+    isPlaying: isMusicPlaying,
+    onToggleMusic: toggleMusic
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "utility-button",
+    title: "Layar penuh",
+    onClick: toggleFullscreen
+  }, isFullscreen ? /*#__PURE__*/React.createElement(Minimize, {
+    size: 22
+  }) : /*#__PURE__*/React.createElement(Maximize, {
+    size: 22
+  })))), /*#__PURE__*/React.createElement("nav", {
+    className: "level-roadmap",
+    "aria-label": "Perjalanan level"
+  }, LEVEL_META.map((meta, i) => /*#__PURE__*/React.createElement("div", {
+    key: meta.title,
+    className: i === level ? 'active ' : i < level ? 'done ' : '',
+    "aria-current": i === level ? 'step' : undefined
+  }, /*#__PURE__*/React.createElement("b", null, i < level ? '✓' : String(i + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("span", null, meta.title), i === level && /*#__PURE__*/React.createElement("small", null, "SEDANG DIMAINKAN")))), /*#__PURE__*/React.createElement("section", {
+    className: "active-mission"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "active-mission-icon"
+  }, /*#__PURE__*/React.createElement(Brain, {
+    size: 30
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", null, "LEVEL ", level + 1, " \xB7 ", level < 3 ? 'MISI INTERAKTIF' : 'TANTANGAN PEMAHAMAN'), /*#__PURE__*/React.createElement("h1", null, LEVEL_META[level].title), /*#__PURE__*/React.createElement("span", null, LEVEL_META[level].task)), /*#__PURE__*/React.createElement("div", {
+    className: "mission-counter"
+  }, /*#__PURE__*/React.createElement("strong", null, level < 3 ? missionReady ? 'TUNTAS' : 'BELUM TUNTAS' : `${levelQuestionCount}/15 DIJAWAB`), /*#__PURE__*/React.createElement("span", null, level < 3 ? `${completedMissions.length}/3 misi wajib selesai` : `Skor sementara: ${quizScore}/30`))), /*#__PURE__*/React.createElement("div", {
+    className: "battle-field"
+  }, /*#__PURE__*/React.createElement("section", {
+    className: "defense-panel"
+  }, /*#__PURE__*/React.createElement("header", null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Shield, {
+    size: 22
+  }), /*#__PURE__*/React.createElement("h2", null, "PERTAHANAN KOTA")), /*#__PURE__*/React.createElement("strong", {
+    className: totalEnergy >= waveTotalEnergy ? 'energy-ready' : ''
+  }, /*#__PURE__*/React.createElement(Zap, {
+    size: 25
+  }), totalEnergy, /*#__PURE__*/React.createElement("small", null, "ENERGI"))), /*#__PURE__*/React.createElement("div", {
+    className: "defense-roster"
+  }, myChars.length + myEquip.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "roster-empty"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "assets/gambar/l3_benteng.png",
+    alt: "Benteng kota"
+  }), /*#__PURE__*/React.createElement("h3", null, "Bangun pasukan pertamamu"), /*#__PURE__*/React.createElement("p", null, "Tuntaskan misi Cari Dana, lalu rekrut pasukan di Toko Kota.")) : /*#__PURE__*/React.createElement("div", {
+    className: "roster-grid"
+  }, [...myChars, ...myEquip].map((item, i) => /*#__PURE__*/React.createElement("article", {
+    className: "unit-tile",
+    key: item.uniqueId || item.id + '-' + i
+  }, /*#__PURE__*/React.createElement("img", {
+    src: item.img,
+    alt: item.name
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, item.name), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Zap, {
+    size: 13
+  }), item.energy)))))), /*#__PURE__*/React.createElement("footer", null, /*#__PURE__*/React.createElement("span", null, myChars.length, " pasukan \xB7 ", myEquip.length, "/3 perlengkapan"), /*#__PURE__*/React.createElement("b", null, totalEnergy >= waveTotalEnergy ? 'Energi siap bertahan' : `Perlu ${waveTotalEnergy - totalEnergy} energi lagi`))), /*#__PURE__*/React.createElement("div", {
+    className: "battle-versus"
+  }, "VS"), /*#__PURE__*/React.createElement("section", {
+    className: "enemy-panel"
+  }, /*#__PURE__*/React.createElement("header", null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Skull, {
+    size: 22
+  }), /*#__PURE__*/React.createElement("h2", null, "GELOMBANG ZOMBIE")), /*#__PURE__*/React.createElement("strong", null, /*#__PURE__*/React.createElement(Zap, {
+    size: 25
+  }), waveTotalEnergy, /*#__PURE__*/React.createElement("small", null, "ENERGI"))), /*#__PURE__*/React.createElement("div", {
+    className: "enemy-roster"
+  }, currentWave.map((item, i) => /*#__PURE__*/React.createElement("article", {
+    className: "enemy-tile",
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "enemy-index"
+  }, "ANCAMAN ", i + 1), /*#__PURE__*/React.createElement("img", {
+    src: item.img,
+    alt: item.name
+  }), /*#__PURE__*/React.createElement("h3", null, item.name), /*#__PURE__*/React.createElement("strong", null, /*#__PURE__*/React.createElement(Zap, {
+    size: 17
+  }), item.energy)))), /*#__PURE__*/React.createElement("footer", null, "Gelombang ", level + 1, " dari 5 \xB7 Perkuat kota sebelum menyerang."))), /*#__PURE__*/React.createElement("div", {
+    className: "battle-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "fund-action",
+    onClick: () => setActiveOverlay('fund_selection')
+  }, /*#__PURE__*/React.createElement(Brain, {
+    size: 29
+  }), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("b", null, "Cari Dana"), /*#__PURE__*/React.createElement("small", null, level < 3 ? missionReady ? 'Latihan ulang tersedia' : 'Mulai misi interaktif' : 'Buka bank soal')), /*#__PURE__*/React.createElement(ArrowRight, {
+    size: 25
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "shop-action",
+    onClick: () => setActiveOverlay('shop')
+  }, /*#__PURE__*/React.createElement(ShoppingBag, {
+    size: 29
+  }), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("b", null, "Toko Kota"), /*#__PURE__*/React.createElement("small", null, "Rekrut pasukan & perlengkapan")), /*#__PURE__*/React.createElement(ArrowRight, {
+    size: 25
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "attack-action",
+    disabled: !canAttack,
+    onClick: attackWave
+  }, /*#__PURE__*/React.createElement(Shield, {
+    size: 29
+  }), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("b", null, canAttack ? 'SERANG ZOMBIE!' : !missionReady ? 'SELESAIKAN MISI' : !quizReady ? 'TUNTASKAN 15 SOAL' : 'TAMBAH ENERGI'), /*#__PURE__*/React.createElement("small", null, canAttack ? 'Kota siap menghadapi gelombang' : 'Selesaikan syarat pertahanan dahulu')))), /*#__PURE__*/React.createElement("footer", {
+    className: "battle-bottom"
+  }, /*#__PURE__*/React.createElement("span", null, "FAKTA & OPINI \xB7 BAHASA INDONESIA KELAS 5"), /*#__PURE__*/React.createElement("span", null, level < 3 ? 'Amati. Kelompokkan. Buktikan.' : `Penilaian: ${Object.keys(quizResults).length}/30 soal · nilai sementara ${(quizScore / 30 * 100).toFixed(1)}`)));
+};
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(/*#__PURE__*/React.createElement(App, null));
+  </script>
+</body>
+</html>

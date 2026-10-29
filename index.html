@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>BERDAZI · Fakta & Opini</title><link rel="icon" href="assets/gambar/logo-berdazi.png"><style>
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#030c12}body{display:grid;place-items:center}#stage{position:relative;overflow:hidden;box-shadow:0 0 100px #0b453540}iframe{display:block;position:absolute;left:0;top:0;width:1600px;height:900px;border:0;transform-origin:0 0;background:#062c28}#orientation-tip{position:fixed;bottom:20px;left:20px;right:20px;color:#9fb8b2;text-align:center;font:12px/1.6 system-ui;pointer-events:none;display:none}@media(orientation:portrait){#orientation-tip{display:block}}
+</style></head><body><main id="stage" aria-label="Permainan BERDAZI dengan rasio 16 banding 9"><iframe id="game" src="assets/permainan.html" title="BERDAZI — permainan fakta dan opini" allow="fullscreen; autoplay" allowfullscreen></iframe></main><p id="orientation-tip">Putar perangkat ke posisi mendatar untuk tampilan permainan yang lebih besar.</p><noscript>Aktifkan JavaScript untuk memainkan BERDAZI.</noscript><script>
+const stage=document.getElementById('stage'),game=document.getElementById('game');
+function resizeStage(){const viewport=window.visualViewport;const width=viewport?viewport.width:innerWidth;const height=viewport?viewport.height:innerHeight;const scale=Math.min(width/1600,height/900);stage.style.width=(1600*scale)+'px';stage.style.height=(900*scale)+'px';game.style.transform='scale('+scale+')';}
+resizeStage();addEventListener('resize',resizeStage);window.visualViewport?.addEventListener('resize',resizeStage);
+function fullscreenState(){game.contentWindow?.postMessage({type:'berdazi-fullscreen-state',active:!!document.fullscreenElement},'*');resizeStage();}
+document.addEventListener('fullscreenchange',fullscreenState);
+addEventListener('message',async event=>{if(event.source!==game.contentWindow||event.data?.type!=='berdazi-fullscreen-request')return;try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();fullscreenState();}catch{game.contentWindow?.postMessage({type:'berdazi-fullscreen-error'},'*');}});
+</script></body></html>

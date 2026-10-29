@@ -1,0 +1,11 @@
+﻿EFEK KLIK BERDAZI
+
+Berkas: assets/audio/klik.wav
+Efek ini dibuat dengan sintesis gelombang sederhana khusus untuk aplikasi
+ini, tanpa mengambil rekaman atau sampel audio pihak ketiga.
+
+Efek klik ini boleh digunakan, disalin, diubah, dan dibagikan secara gratis,
+termasuk dalam karya komersial. Atribusi tidak diwajibkan.
+
+Keterangan ini hanya berlaku untuk klik.wav. Musik dan efek jawaban lain
+tetap mengikuti sumber dan ketentuan masing-masing.
